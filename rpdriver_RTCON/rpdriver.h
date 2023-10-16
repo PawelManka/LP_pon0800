@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.308
+ * Model version              : 1.310
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct  9 10:43:12 2023
+ * C source code generated on : Mon Oct 16 09:46:10 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -225,13 +225,13 @@ struct P_rpdriver_T_ {
   real_T DCConverttoA1_Gain;           /* Expression: 1
                                         * Referenced by: '<S1>/DC Convert to [A]1'
                                         */
-  real_T DC_Ctrl1_Value;               /* Expression: 0
+  real_T DC_Ctrl1_Value;               /* Expression: 0.6
                                         * Referenced by: '<Root>/DC_Ctrl1'
                                         */
-  real_T LookUpTable_XData[22];        /* Expression: sps.tv
+  real_T LookUpTable_XData[18];        /* Expression: sps.tv
                                         * Referenced by: '<S4>/Look-Up Table'
                                         */
-  real_T LookUpTable_YData[22];        /* Expression: sps.opv
+  real_T LookUpTable_YData[18];        /* Expression: sps.opv
                                         * Referenced by: '<S4>/Look-Up Table'
                                         */
   real_T DC_Ctrl2_Value;               /* Expression: 0.6

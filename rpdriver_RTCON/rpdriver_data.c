@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.308
+ * Model version              : 1.310
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct  9 10:43:12 2023
+ * C source code generated on : Mon Oct 16 09:46:10 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -108,23 +108,22 @@ P_rpdriver_T rpdriver_P = {
    */
   1.0,
 
-  /* Expression: 0
+  /* Expression: 0.6
    * Referenced by: '<Root>/DC_Ctrl1'
    */
-  0.0,
+  0.6,
 
   /* Expression: sps.tv
    * Referenced by: '<S4>/Look-Up Table'
    */
-  { 0.0, 3.0, 3.0, 6.0, 6.0, 9.0, 9.0, 12.0, 12.0, 15.0, 15.0, 18.0, 18.0, 21.0,
-    21.0, 24.0, 24.0, 27.0, 27.0, 30.0, 30.0, 31.0 },
+  { 0.0, 4.0, 4.0, 9.0, 9.0, 13.0, 13.0, 14.0, 14.0, 20.0, 20.0, 23.0, 23.0,
+    26.0, 26.0, 29.0, 29.0, 30.0 },
 
   /* Expression: sps.opv
    * Referenced by: '<S4>/Look-Up Table'
    */
-  { 0.0, 0.0, -0.1, -0.1, -0.2, -0.2, -0.30000000000000004, -0.30000000000000004,
-    -0.4, -0.4, -0.5, -0.5, -0.6, -0.6, -0.7, -0.7, -0.8, -0.8, -0.9, -0.9, -1.0,
-    -1.0 },
+  { 0.4, 0.4, 0.0, 0.0, -0.4, -0.4, 0.0, 0.0, 1.0, 1.0, -1.0, -1.0, 0.0, 0.0,
+    1.0, 1.0, -1.0, -1.0 },
 
   /* Expression: 0.6
    * Referenced by: '<Root>/DC_Ctrl2'
