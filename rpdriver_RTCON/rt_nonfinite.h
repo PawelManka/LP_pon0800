@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.310
+ * Model version              : 1.311
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct 16 09:46:10 2023
+ * C source code generated on : Mon Oct 23 08:50:45 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping

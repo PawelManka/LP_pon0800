@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.310
+ * Model version              : 1.311
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct 16 09:46:10 2023
+ * C source code generated on : Mon Oct 23 08:50:45 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -108,22 +108,22 @@ P_rpdriver_T rpdriver_P = {
    */
   1.0,
 
-  /* Expression: 0.6
+  /* Expression: 1
    * Referenced by: '<Root>/DC_Ctrl1'
    */
-  0.6,
+  1.0,
 
   /* Expression: sps.tv
    * Referenced by: '<S4>/Look-Up Table'
    */
-  { 0.0, 4.0, 4.0, 9.0, 9.0, 13.0, 13.0, 14.0, 14.0, 20.0, 20.0, 23.0, 23.0,
-    26.0, 26.0, 29.0, 29.0, 30.0 },
+  { 0.0, 2.0, 2.0, 5.0, 5.0, 8.0, 8.0, 11.0, 11.0, 15.0, 15.0, 17.0, 17.0, 20.0,
+    20.0, 21.0 },
 
   /* Expression: sps.opv
    * Referenced by: '<S4>/Look-Up Table'
    */
-  { 0.4, 0.4, 0.0, 0.0, -0.4, -0.4, 0.0, 0.0, 1.0, 1.0, -1.0, -1.0, 0.0, 0.0,
-    1.0, 1.0, -1.0, -1.0 },
+  { 0.2, 0.2, 0.4, 0.4, 0.5, 0.5, 0.1, 0.1, -0.1, -0.1, -0.3, -0.3, 0.1, 0.1,
+    -0.3, -0.3 },
 
   /* Expression: 0.6
    * Referenced by: '<Root>/DC_Ctrl2'
@@ -173,7 +173,7 @@ P_rpdriver_T rpdriver_P = {
   /* Computed Parameter: ResetEncoders2_CurrentSetting
    * Referenced by: '<Root>/Reset Encoders2'
    */
-  0U,
+  1U,
 
   /* Computed Parameter: ResetEncoders1_CurrentSetting
    * Referenced by: '<Root>/Reset Encoders1'

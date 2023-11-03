@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.310
+ * Model version              : 1.311
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct 16 09:46:10 2023
+ * C source code generated on : Mon Oct 23 08:50:45 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -150,7 +150,7 @@ void rpdriver_step(void)
     /* Lookup: '<S4>/Look-Up Table' incorporates:
      *  Clock: '<S4>/Clock'
      */
-    rpdriver_B.LookUpTable = rt_Lookup(rpdriver_P.LookUpTable_XData, 18,
+    rpdriver_B.LookUpTable = rt_Lookup(rpdriver_P.LookUpTable_XData, 16,
       LookUpTable_tmp, rpdriver_P.LookUpTable_YData);
 
     /* ManualSwitch: '<Root>/Reset Encoders1' incorporates:
@@ -478,10 +478,10 @@ void rpdriver_initialize(void)
   }
 
   /* External mode info */
-  rpdriver_M->Sizes.checksums[0] = (2877365769U);
-  rpdriver_M->Sizes.checksums[1] = (488559990U);
-  rpdriver_M->Sizes.checksums[2] = (432901485U);
-  rpdriver_M->Sizes.checksums[3] = (1644797518U);
+  rpdriver_M->Sizes.checksums[0] = (1937350283U);
+  rpdriver_M->Sizes.checksums[1] = (3119562608U);
+  rpdriver_M->Sizes.checksums[2] = (4043999933U);
+  rpdriver_M->Sizes.checksums[3] = (4285914079U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -886,7 +886,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "walidacja_modelu_nr2",
+      "sprawdzenie_napiecia",
       1,
       0,
       1,

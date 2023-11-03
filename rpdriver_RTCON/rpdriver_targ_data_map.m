@@ -109,43 +109,43 @@
 	
 	  ;% rpdriver_P.LookUpTable_YData
 	  section.data(20).logicalSrcIdx = 19;
-	  section.data(20).dtTransOffset = 38;
+	  section.data(20).dtTransOffset = 36;
 	
 	  ;% rpdriver_P.DC_Ctrl2_Value
 	  section.data(21).logicalSrcIdx = 20;
-	  section.data(21).dtTransOffset = 56;
+	  section.data(21).dtTransOffset = 52;
 	
 	  ;% rpdriver_P.Gain3_Gain
 	  section.data(22).logicalSrcIdx = 21;
-	  section.data(22).dtTransOffset = 57;
+	  section.data(22).dtTransOffset = 53;
 	
 	  ;% rpdriver_P.Gain_Gain
 	  section.data(23).logicalSrcIdx = 22;
-	  section.data(23).dtTransOffset = 58;
+	  section.data(23).dtTransOffset = 54;
 	
 	  ;% rpdriver_P.Gain2_Gain
 	  section.data(24).logicalSrcIdx = 23;
-	  section.data(24).dtTransOffset = 60;
+	  section.data(24).dtTransOffset = 56;
 	
 	  ;% rpdriver_P.Prescaler_Value
 	  section.data(25).logicalSrcIdx = 24;
-	  section.data(25).dtTransOffset = 61;
+	  section.data(25).dtTransOffset = 57;
 	
 	  ;% rpdriver_P.Saturation_UpperSat
 	  section.data(26).logicalSrcIdx = 25;
-	  section.data(26).dtTransOffset = 62;
+	  section.data(26).dtTransOffset = 58;
 	
 	  ;% rpdriver_P.Saturation_LowerSat
 	  section.data(27).logicalSrcIdx = 26;
-	  section.data(27).dtTransOffset = 63;
+	  section.data(27).dtTransOffset = 59;
 	
 	  ;% rpdriver_P.ThermFlag_Value
 	  section.data(28).logicalSrcIdx = 27;
-	  section.data(28).dtTransOffset = 64;
+	  section.data(28).dtTransOffset = 60;
 	
 	  ;% rpdriver_P.HitCrossing_Offset
 	  section.data(29).logicalSrcIdx = 28;
-	  section.data(29).dtTransOffset = 65;
+	  section.data(29).dtTransOffset = 61;
 	
       nTotData = nTotData + section.nData;
       paramMap.sections(1) = section;
@@ -415,8 +415,8 @@
   ;%
 
 
-  targMap.checksum0 = 2877365769;
-  targMap.checksum1 = 488559990;
-  targMap.checksum2 = 432901485;
-  targMap.checksum3 = 1644797518;
+  targMap.checksum0 = 1937350283;
+  targMap.checksum1 = 3119562608;
+  targMap.checksum2 = 4043999933;
+  targMap.checksum3 = 4285914079;
 
