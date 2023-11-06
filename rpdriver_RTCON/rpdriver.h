@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.311
+ * Model version              : 1.338
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct 23 08:50:45 2023
+ * C source code generated on : Mon Nov  6 11:02:58 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -142,6 +142,7 @@ typedef struct {
   real_T SFunction_o5;                 /* '<S1>/S-Function' */
   real_T SFunction_o6;                 /* '<S1>/S-Function' */
   real_T SFunction_o7[2];              /* '<S1>/S-Function' */
+  real_T PendulumAnglerad;             /* '<S1>/Pendulum Convert to rad' */
   real_T PendPos_ZeroDown;             /* '<S3>/Trigonometric Function' */
   real_T PendPos_ZeroUp;               /* '<S3>/Trigonometric Function3' */
   real_T Periodms;                     /* '<S1>/Gain1' */
@@ -149,12 +150,17 @@ typedef struct {
   real_T DCAnglerad;                   /* '<S1>/DC Convert to rad' */
   real_T DCVelrads;                    /* '<S1>/Divide' */
   real_T DCConverttoA1;                /* '<S1>/DC Convert to [A]1' */
-  real_T LookUpTable;                  /* '<S4>/Look-Up Table' */
+  real_T Gain;                         /* '<Root>/Gain' */
+  real_T Sum;                          /* '<Root>/Sum' */
   real_T Control;                      /* '<Root>/Gain3' */
-  real_T Gain[2];                      /* '<S1>/Gain' */
+  real_T Gain2;                        /* '<Root>/Gain2' */
+  real_T Gain4;                        /* '<Root>/Gain4' */
+  real_T Gain5;                        /* '<Root>/Gain5' */
+  real_T Gain_j[2];                    /* '<S1>/Gain' */
   real_T Prescaler;                    /* '<S1>/Prescaler' */
   real_T Saturation;                   /* '<S1>/Saturation' */
   real_T ThermFlag;                    /* '<S1>/ThermFlag' */
+  real_T LookUpTable;                  /* '<S4>/Look-Up Table' */
   real_T Derivative;                   /* '<S4>/Derivative' */
 } B_rpdriver_T;
 
@@ -168,14 +174,41 @@ typedef struct {
   real_T TimeStampB;                   /* '<S4>/Derivative' */
   real_T LastUAtTimeB;                 /* '<S4>/Derivative' */
   struct {
-    void *LoggedData[7];
+    void *LoggedData[8];
   } PlotState_PWORK;                   /* '<Root>/PlotState' */
+
+  struct {
+    void *LoggedData[4];
+  } Scope_PWORK;                       /* '<Root>/Scope' */
+
+  struct {
+    void *LoggedData;
+  } Scope1_PWORK;                      /* '<Root>/Scope1' */
 } DW_rpdriver_T;
 
 /* Parameters (default storage) */
 struct P_rpdriver_T_ {
+  real_T K[3];                         /* Variable: K
+                                        * Referenced by:
+                                        *   '<Root>/Gain'
+                                        *   '<Root>/Gain2'
+                                        *   '<Root>/Gain4'
+                                        *   '<Root>/Gain5'
+                                        */
+  real_T DC_Ctrl2_Value;               /* Expression: 0
+                                        * Referenced by: '<Root>/DC_Ctrl2'
+                                        */
+  real_T Saturation_UpperSat;          /* Expression: 0.9
+                                        * Referenced by: '<Root>/Saturation'
+                                        */
+  real_T Saturation_LowerSat;          /* Expression: -0.9
+                                        * Referenced by: '<Root>/Saturation'
+                                        */
   real_T Gain1_Gain;                   /* Expression: 1
                                         * Referenced by: '<Root>/Gain1'
+                                        */
+  real_T DC_Ctrl1_Value;               /* Expression: 0
+                                        * Referenced by: '<Root>/DC_Ctrl1'
                                         */
   real_T Normal_Value;                 /* Expression: 0
                                         * Referenced by: '<Root>/Normal'
@@ -225,17 +258,11 @@ struct P_rpdriver_T_ {
   real_T DCConverttoA1_Gain;           /* Expression: 1
                                         * Referenced by: '<S1>/DC Convert to [A]1'
                                         */
-  real_T DC_Ctrl1_Value;               /* Expression: 1
-                                        * Referenced by: '<Root>/DC_Ctrl1'
+  real_T x_ep_Value[3];                /* Expression: [0 0 0]
+                                        * Referenced by: '<Root>/x_ep'
                                         */
-  real_T LookUpTable_XData[16];        /* Expression: sps.tv
-                                        * Referenced by: '<S4>/Look-Up Table'
-                                        */
-  real_T LookUpTable_YData[16];        /* Expression: sps.opv
-                                        * Referenced by: '<S4>/Look-Up Table'
-                                        */
-  real_T DC_Ctrl2_Value;               /* Expression: 0.6
-                                        * Referenced by: '<Root>/DC_Ctrl2'
+  real_T Constant1_Value;              /* Expression: 0
+                                        * Referenced by: '<Root>/Constant1'
                                         */
   real_T Gain3_Gain;                   /* Expression: 1
                                         * Referenced by: '<Root>/Gain3'
@@ -249,14 +276,20 @@ struct P_rpdriver_T_ {
   real_T Prescaler_Value;              /* Expression: 0
                                         * Referenced by: '<S1>/Prescaler'
                                         */
-  real_T Saturation_UpperSat;          /* Expression: 1
+  real_T Saturation_UpperSat_h;        /* Expression: 1
                                         * Referenced by: '<S1>/Saturation'
                                         */
-  real_T Saturation_LowerSat;          /* Expression: -1
+  real_T Saturation_LowerSat_f;        /* Expression: -1
                                         * Referenced by: '<S1>/Saturation'
                                         */
   real_T ThermFlag_Value;              /* Expression: 0
                                         * Referenced by: '<S1>/ThermFlag'
+                                        */
+  real_T LookUpTable_XData[42];        /* Expression: sps.tv
+                                        * Referenced by: '<S4>/Look-Up Table'
+                                        */
+  real_T LookUpTable_YData[42];        /* Expression: sps.opv
+                                        * Referenced by: '<S4>/Look-Up Table'
                                         */
   real_T HitCrossing_Offset;           /* Expression: 0
                                         * Referenced by: '<S4>/Hit  Crossing'

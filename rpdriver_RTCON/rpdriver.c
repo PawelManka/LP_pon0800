@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.311
+ * Model version              : 1.338
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Oct 23 08:50:45 2023
+ * C source code generated on : Mon Nov  6 11:02:58 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -70,13 +70,12 @@ real_T rt_atan2d_snf(real_T u0, real_T u1)
 /* Model step function */
 void rpdriver_step(void)
 {
-  /* local block i/o variables */
-  real_T rtb_PendulumAnglerad;
-
   {
     real_T *lastU;
-    real_T rtb_ResetEncoders;
-    real_T LookUpTable_tmp;
+    real_T rtb_Gain2;
+    real_T Gain_tmp;
+    real_T Gain_tmp_0;
+    real_T Gain_tmp_1;
 
     /* S-Function (rtdacusb2_rpend_dd): '<S1>/S-Function' */
 
@@ -87,27 +86,26 @@ void rpdriver_step(void)
     }
 
     /* Gain: '<S1>/Pendulum Convert to rad' */
-    rtb_PendulumAnglerad = rpdriver_P.PendulumConverttorad_Gain *
+    rpdriver_B.PendulumAnglerad = rpdriver_P.PendulumConverttorad_Gain *
       rpdriver_B.SFunction_o2;
 
     /* Trigonometry: '<S3>/Trigonometric Function' incorporates:
      *  Trigonometry: '<S3>/Trigonometric Function1'
      *  Trigonometry: '<S3>/Trigonometric Function2'
      */
-    rpdriver_B.PendPos_ZeroDown = rt_atan2d_snf(sin(rtb_PendulumAnglerad), cos
-      (rtb_PendulumAnglerad));
+    rpdriver_B.PendPos_ZeroDown = rt_atan2d_snf(sin(rpdriver_B.PendulumAnglerad),
+      cos(rpdriver_B.PendulumAnglerad));
 
     /* Sum: '<S3>/Add' incorporates:
      *  Constant: '<S3>/Constant'
      */
-    rtb_ResetEncoders = rtb_PendulumAnglerad + rpdriver_P.Constant_Value;
+    rtb_Gain2 = rpdriver_B.PendulumAnglerad + rpdriver_P.Constant_Value;
 
     /* Trigonometry: '<S3>/Trigonometric Function3' incorporates:
      *  Trigonometry: '<S3>/Trigonometric Function4'
      *  Trigonometry: '<S3>/Trigonometric Function5'
      */
-    rpdriver_B.PendPos_ZeroUp = rt_atan2d_snf(sin(rtb_ResetEncoders), cos
-      (rtb_ResetEncoders));
+    rpdriver_B.PendPos_ZeroUp = rt_atan2d_snf(sin(rtb_Gain2), cos(rtb_Gain2));
 
     /* Gain: '<S1>/Gain1' incorporates:
      *  Memory: '<S1>/Memory'
@@ -121,7 +119,7 @@ void rpdriver_step(void)
      *  Memory: '<S1>/Memory2'
      *  Sum: '<S1>/Add2'
      */
-    rpdriver_B.PendulumVelrads = (rtb_PendulumAnglerad -
+    rpdriver_B.PendulumVelrads = (rpdriver_B.PendulumAnglerad -
       rpdriver_DW.Memory2_PreviousInput) * rpdriver_P.rad2rads_Gain /
       rpdriver_B.Periodms;
 
@@ -142,16 +140,25 @@ void rpdriver_step(void)
     rpdriver_B.DCConverttoA1 = rpdriver_P.DCConverttoA1_Gain *
       rpdriver_B.SFunction_o4;
 
-    /* Clock: '<S4>/Clock' incorporates:
-     *  Derivative: '<S4>/Derivative'
+    /* Gain: '<Root>/Gain' incorporates:
+     *  Constant: '<Root>/x_ep'
+     *  Gain: '<Root>/Gain2'
+     *  Gain: '<Root>/Gain4'
+     *  Gain: '<Root>/Gain5'
+     *  Sum: '<Root>/Sum1'
      */
-    LookUpTable_tmp = rpdriver_M->Timing.t[0];
+    Gain_tmp = rpdriver_P.K[0] * (rpdriver_B.PendulumAnglerad -
+      rpdriver_P.x_ep_Value[0]);
+    Gain_tmp_0 = rpdriver_P.K[1] * (rpdriver_B.PendulumVelrads -
+      rpdriver_P.x_ep_Value[1]);
+    Gain_tmp_1 = rpdriver_P.K[2] * (rpdriver_B.DCVelrads -
+      rpdriver_P.x_ep_Value[2]);
+    rpdriver_B.Gain = (Gain_tmp + Gain_tmp_0) + Gain_tmp_1;
 
-    /* Lookup: '<S4>/Look-Up Table' incorporates:
-     *  Clock: '<S4>/Clock'
+    /* Sum: '<Root>/Sum' incorporates:
+     *  Constant: '<Root>/Constant1'
      */
-    rpdriver_B.LookUpTable = rt_Lookup(rpdriver_P.LookUpTable_XData, 16,
-      LookUpTable_tmp, rpdriver_P.LookUpTable_YData);
+    rpdriver_B.Sum = rpdriver_P.Constant1_Value - rpdriver_B.Gain;
 
     /* ManualSwitch: '<Root>/Reset Encoders1' incorporates:
      *  Constant: '<Root>/DC_Ctrl2'
@@ -160,22 +167,34 @@ void rpdriver_step(void)
       /* ManualSwitch: '<Root>/Reset Encoders2' incorporates:
        *  Constant: '<Root>/DC_Ctrl1'
        *  Gain: '<Root>/Gain1'
+       *  Saturate: '<Root>/Saturation'
        */
       if (rpdriver_P.ResetEncoders2_CurrentSetting == 1) {
-        rtb_ResetEncoders = rpdriver_P.DC_Ctrl1_Value;
+        rtb_Gain2 = rpdriver_P.DC_Ctrl1_Value;
       } else {
-        rtb_ResetEncoders = rpdriver_P.Gain1_Gain * rpdriver_B.LookUpTable;
+        if (rpdriver_B.Sum > rpdriver_P.Saturation_UpperSat) {
+          /* Saturate: '<Root>/Saturation' */
+          rtb_Gain2 = rpdriver_P.Saturation_UpperSat;
+        } else if (rpdriver_B.Sum < rpdriver_P.Saturation_LowerSat) {
+          /* Saturate: '<Root>/Saturation' */
+          rtb_Gain2 = rpdriver_P.Saturation_LowerSat;
+        } else {
+          /* Saturate: '<Root>/Saturation' */
+          rtb_Gain2 = rpdriver_B.Sum;
+        }
+
+        rtb_Gain2 *= rpdriver_P.Gain1_Gain;
       }
 
       /* End of ManualSwitch: '<Root>/Reset Encoders2' */
     } else {
-      rtb_ResetEncoders = rpdriver_P.DC_Ctrl2_Value;
+      rtb_Gain2 = rpdriver_P.DC_Ctrl2_Value;
     }
 
     /* End of ManualSwitch: '<Root>/Reset Encoders1' */
 
     /* Gain: '<Root>/Gain3' */
-    rpdriver_B.Control = rpdriver_P.Gain3_Gain * rtb_ResetEncoders;
+    rpdriver_B.Control = rpdriver_P.Gain3_Gain * rtb_Gain2;
 
     /* Scope: '<Root>/PlotState' */
     {
@@ -193,50 +212,107 @@ void rpdriver_step(void)
       /* signals */
       {
         real_T up0[1];
-        up0[0] = rpdriver_B.PendPos_ZeroDown;
+        up0[0] = rpdriver_B.PendulumAnglerad;
         rt_UpdateLogVar((LogVar *)var, up0, 0);
         var = var->next;
       }
 
       {
         real_T up1[1];
-        up1[0] = rpdriver_B.PendPos_ZeroUp;
+        up1[0] = rpdriver_B.PendPos_ZeroDown;
         rt_UpdateLogVar((LogVar *)var, up1, 0);
         var = var->next;
       }
 
       {
         real_T up2[1];
-        up2[0] = rpdriver_B.PendulumVelrads;
+        up2[0] = rpdriver_B.PendPos_ZeroUp;
         rt_UpdateLogVar((LogVar *)var, up2, 0);
         var = var->next;
       }
 
       {
         real_T up3[1];
-        up3[0] = rpdriver_B.DCAnglerad;
+        up3[0] = rpdriver_B.PendulumVelrads;
         rt_UpdateLogVar((LogVar *)var, up3, 0);
         var = var->next;
       }
 
       {
         real_T up4[1];
-        up4[0] = rpdriver_B.DCVelrads;
+        up4[0] = rpdriver_B.DCAnglerad;
         rt_UpdateLogVar((LogVar *)var, up4, 0);
         var = var->next;
       }
 
       {
         real_T up5[1];
-        up5[0] = rpdriver_B.DCConverttoA1;
+        up5[0] = rpdriver_B.DCVelrads;
         rt_UpdateLogVar((LogVar *)var, up5, 0);
         var = var->next;
       }
 
       {
         real_T up6[1];
-        up6[0] = rpdriver_B.Control;
+        up6[0] = rpdriver_B.DCConverttoA1;
         rt_UpdateLogVar((LogVar *)var, up6, 0);
+        var = var->next;
+      }
+
+      {
+        real_T up7[1];
+        up7[0] = rpdriver_B.Control;
+        rt_UpdateLogVar((LogVar *)var, up7, 0);
+      }
+    }
+
+    /* Gain: '<Root>/Gain2' */
+    rpdriver_B.Gain2 = Gain_tmp;
+
+    /* Gain: '<Root>/Gain4' */
+    rpdriver_B.Gain4 = Gain_tmp_0;
+
+    /* Gain: '<Root>/Gain5' */
+    rpdriver_B.Gain5 = Gain_tmp_1;
+
+    /* Scope: '<Root>/Scope' */
+    {
+      StructLogVar *svar = (StructLogVar *)rpdriver_DW.Scope_PWORK.LoggedData[0];
+      LogVar *var = svar->signals.values;
+
+      /* time */
+      {
+        double locTime = rpdriver_M->Timing.t[1];
+        ;
+        rt_UpdateLogVar((LogVar *)svar->time, &locTime, 0);
+      }
+
+      /* signals */
+      {
+        real_T up0[1];
+        up0[0] = rpdriver_B.Gain;
+        rt_UpdateLogVar((LogVar *)var, up0, 0);
+        var = var->next;
+      }
+
+      {
+        real_T up1[1];
+        up1[0] = rpdriver_B.Gain2;
+        rt_UpdateLogVar((LogVar *)var, up1, 0);
+        var = var->next;
+      }
+
+      {
+        real_T up2[1];
+        up2[0] = rpdriver_B.Gain4;
+        rt_UpdateLogVar((LogVar *)var, up2, 0);
+        var = var->next;
+      }
+
+      {
+        real_T up3[1];
+        up3[0] = rpdriver_B.Gain5;
+        rt_UpdateLogVar((LogVar *)var, up3, 0);
       }
     }
 
@@ -245,30 +321,30 @@ void rpdriver_step(void)
      *  Constant: '<Root>/Reset'
      */
     if (rpdriver_P.ResetEncoders_CurrentSetting == 1) {
-      rtb_ResetEncoders = rpdriver_P.Reset_Value;
+      rtb_Gain2 = rpdriver_P.Reset_Value;
     } else {
-      rtb_ResetEncoders = rpdriver_P.Normal_Value;
+      rtb_Gain2 = rpdriver_P.Normal_Value;
     }
 
     /* End of ManualSwitch: '<Root>/Reset Encoders' */
 
     /* Gain: '<S1>/Gain' */
-    rpdriver_B.Gain[0] = rpdriver_P.Gain_Gain[0] * rtb_ResetEncoders;
-    rpdriver_B.Gain[1] = rpdriver_P.Gain_Gain[1] * rtb_ResetEncoders;
+    rpdriver_B.Gain_j[0] = rpdriver_P.Gain_Gain[0] * rtb_Gain2;
+    rpdriver_B.Gain_j[1] = rpdriver_P.Gain_Gain[1] * rtb_Gain2;
 
     /* Constant: '<S1>/Prescaler' */
     rpdriver_B.Prescaler = rpdriver_P.Prescaler_Value;
 
     /* Gain: '<S1>/Gain2' */
-    rtb_ResetEncoders = rpdriver_P.Gain2_Gain * rpdriver_B.Control;
+    rtb_Gain2 = rpdriver_P.Gain2_Gain * rpdriver_B.Control;
 
     /* Saturate: '<S1>/Saturation' */
-    if (rtb_ResetEncoders > rpdriver_P.Saturation_UpperSat) {
-      rpdriver_B.Saturation = rpdriver_P.Saturation_UpperSat;
-    } else if (rtb_ResetEncoders < rpdriver_P.Saturation_LowerSat) {
-      rpdriver_B.Saturation = rpdriver_P.Saturation_LowerSat;
+    if (rtb_Gain2 > rpdriver_P.Saturation_UpperSat_h) {
+      rpdriver_B.Saturation = rpdriver_P.Saturation_UpperSat_h;
+    } else if (rtb_Gain2 < rpdriver_P.Saturation_LowerSat_f) {
+      rpdriver_B.Saturation = rpdriver_P.Saturation_LowerSat_f;
     } else {
-      rpdriver_B.Saturation = rtb_ResetEncoders;
+      rpdriver_B.Saturation = rtb_Gain2;
     }
 
     /* End of Saturate: '<S1>/Saturation' */
@@ -276,27 +352,38 @@ void rpdriver_step(void)
     /* Constant: '<S1>/ThermFlag' */
     rpdriver_B.ThermFlag = rpdriver_P.ThermFlag_Value;
 
+    /* Clock: '<S4>/Clock' incorporates:
+     *  Derivative: '<S4>/Derivative'
+     */
+    Gain_tmp = rpdriver_M->Timing.t[0];
+
+    /* Lookup: '<S4>/Look-Up Table' incorporates:
+     *  Clock: '<S4>/Clock'
+     */
+    rpdriver_B.LookUpTable = rt_Lookup(rpdriver_P.LookUpTable_XData, 42,
+      Gain_tmp, rpdriver_P.LookUpTable_YData);
+
     /* Derivative: '<S4>/Derivative' */
-    if ((rpdriver_DW.TimeStampA >= LookUpTable_tmp) && (rpdriver_DW.TimeStampB >=
-         LookUpTable_tmp)) {
+    if ((rpdriver_DW.TimeStampA >= Gain_tmp) && (rpdriver_DW.TimeStampB >=
+         Gain_tmp)) {
       rpdriver_B.Derivative = 0.0;
     } else {
-      rtb_ResetEncoders = rpdriver_DW.TimeStampA;
+      rtb_Gain2 = rpdriver_DW.TimeStampA;
       lastU = &rpdriver_DW.LastUAtTimeA;
       if (rpdriver_DW.TimeStampA < rpdriver_DW.TimeStampB) {
-        if (rpdriver_DW.TimeStampB < LookUpTable_tmp) {
-          rtb_ResetEncoders = rpdriver_DW.TimeStampB;
+        if (rpdriver_DW.TimeStampB < Gain_tmp) {
+          rtb_Gain2 = rpdriver_DW.TimeStampB;
           lastU = &rpdriver_DW.LastUAtTimeB;
         }
       } else {
-        if (rpdriver_DW.TimeStampA >= LookUpTable_tmp) {
-          rtb_ResetEncoders = rpdriver_DW.TimeStampB;
+        if (rpdriver_DW.TimeStampA >= Gain_tmp) {
+          rtb_Gain2 = rpdriver_DW.TimeStampB;
           lastU = &rpdriver_DW.LastUAtTimeB;
         }
       }
 
-      rpdriver_B.Derivative = (rpdriver_B.LookUpTable - *lastU) /
-        (LookUpTable_tmp - rtb_ResetEncoders);
+      rpdriver_B.Derivative = (rpdriver_B.LookUpTable - *lastU) / (Gain_tmp -
+        rtb_Gain2);
     }
   }
 
@@ -307,7 +394,7 @@ void rpdriver_step(void)
     real_T *lastU;
 
     /* Update for Memory: '<S1>/Memory2' */
-    rpdriver_DW.Memory2_PreviousInput = rtb_PendulumAnglerad;
+    rpdriver_DW.Memory2_PreviousInput = rpdriver_B.PendulumAnglerad;
 
     /* Update for Memory: '<S1>/Memory' */
     rpdriver_DW.Memory_PreviousInput = rpdriver_B.SFunction_o6;
@@ -478,15 +565,15 @@ void rpdriver_initialize(void)
   }
 
   /* External mode info */
-  rpdriver_M->Sizes.checksums[0] = (1937350283U);
-  rpdriver_M->Sizes.checksums[1] = (3119562608U);
-  rpdriver_M->Sizes.checksums[2] = (4043999933U);
-  rpdriver_M->Sizes.checksums[3] = (4285914079U);
+  rpdriver_M->Sizes.checksums[0] = (2839709376U);
+  rpdriver_M->Sizes.checksums[1] = (3946555173U);
+  rpdriver_M->Sizes.checksums[2] = (713148146U);
+  rpdriver_M->Sizes.checksums[3] = (1681574305U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
     static RTWExtModeInfo rt_ExtModeInfo;
-    static const sysRanDType *systemRan[5];
+    static const sysRanDType *systemRan[7];
     rpdriver_M->extModeInfo = (&rt_ExtModeInfo);
     rteiSetSubSystemActiveVectorAddresses(&rt_ExtModeInfo, systemRan);
     systemRan[0] = &rtAlwaysEnabled;
@@ -494,6 +581,8 @@ void rpdriver_initialize(void)
     systemRan[2] = &rtAlwaysEnabled;
     systemRan[3] = &rtAlwaysEnabled;
     systemRan[4] = &rtAlwaysEnabled;
+    systemRan[5] = &rtAlwaysEnabled;
+    systemRan[6] = &rtAlwaysEnabled;
     rteiSetModelMappingInfoPtr(rpdriver_M->extModeInfo,
       &rpdriver_M->SpecialInfo.mappingInfo);
     rteiSetChecksumsPtr(rpdriver_M->extModeInfo, rpdriver_M->Sizes.checksums);
@@ -645,8 +734,8 @@ void rpdriver_initialize(void)
         {
           real_T const **sfcnUPtrs = (real_T const **)
             &rpdriver_M->NonInlinedSFcns.Sfcn0.UPtrs1;
-          sfcnUPtrs[0] = rpdriver_B.Gain;
-          sfcnUPtrs[1] = &rpdriver_B.Gain[1];
+          sfcnUPtrs[0] = rpdriver_B.Gain_j;
+          sfcnUPtrs[1] = &rpdriver_B.Gain_j[1];
           ssSetInputPortSignalPtrs(rts, 1, (InputPtrsType)&sfcnUPtrs[0]);
           _ssSetInputPortNumDimensions(rts, 1, 1);
           ssSetInputPortWidth(rts, 1, 2);
@@ -822,18 +911,19 @@ void rpdriver_initialize(void)
   /* Start for Scope: '<Root>/PlotState' */
   {
     RTWLogSignalInfo rt_ScopeSignalInfo;
-    static int_T rt_ScopeSignalWidths[] = { 1, 1, 1, 1, 1, 1, 1 };
+    static int_T rt_ScopeSignalWidths[] = { 1, 1, 1, 1, 1, 1, 1, 1 };
 
-    static int_T rt_ScopeSignalNumDimensions[] = { 1, 1, 1, 1, 1, 1, 1 };
+    static int_T rt_ScopeSignalNumDimensions[] = { 1, 1, 1, 1, 1, 1, 1, 1 };
 
-    static int_T rt_ScopeSignalDimensions[] = { 1, 1, 1, 1, 1, 1, 1 };
+    static int_T rt_ScopeSignalDimensions[] = { 1, 1, 1, 1, 1, 1, 1, 1 };
 
     static void *rt_ScopeCurrSigDims[] = { (NULL), (NULL), (NULL), (NULL), (NULL),
-      (NULL), (NULL) };
+      (NULL), (NULL), (NULL) };
 
-    static int_T rt_ScopeCurrSigDimsSize[] = { 4, 4, 4, 4, 4, 4, 4 };
+    static int_T rt_ScopeCurrSigDimsSize[] = { 4, 4, 4, 4, 4, 4, 4, 4 };
 
-    static const char_T *rt_ScopeSignalLabels[] = { "<PendPos_ZeroDown>",
+    static const char_T *rt_ScopeSignalLabels[] = { "<Pendulum Angle [rad]>",
+      "<PendPos_ZeroDown>",
       "<PendPos_ZeroUp>",
       "<Pendulum Vel [rad/s]>",
       "<DC Angle [rad]>",
@@ -842,25 +932,26 @@ void rpdriver_initialize(void)
       "Control" };
 
     static char_T rt_ScopeSignalTitles[] =
-      "<PendPos_ZeroDown><PendPos_ZeroUp><Pendulum Vel [rad/s]><DC Angle [rad]><DC Vel [rad/s]>DC CurrentControl";
-    static int_T rt_ScopeSignalTitleLengths[] = { 18, 16, 22, 16, 16, 10, 7 };
+      "<Pendulum Angle [rad]><PendPos_ZeroDown><PendPos_ZeroUp><Pendulum Vel [rad/s]><DC Angle [rad]><DC Vel [rad/s]>DC CurrentControl";
+    static int_T rt_ScopeSignalTitleLengths[] = { 22, 18, 16, 22, 16, 16, 10, 7
+    };
 
-    static boolean_T rt_ScopeSignalIsVarDims[] = { 0, 0, 0, 0, 0, 0, 0 };
+    static boolean_T rt_ScopeSignalIsVarDims[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    static int_T rt_ScopeSignalPlotStyles[] = { 1, 1, 1, 1, 1, 1, 0 };
+    static int_T rt_ScopeSignalPlotStyles[] = { 1, 1, 1, 1, 1, 1, 1, 1 };
 
-    BuiltInDTypeId dTypes[7] = { SS_DOUBLE, SS_DOUBLE, SS_DOUBLE, SS_DOUBLE,
-      SS_DOUBLE, SS_DOUBLE, SS_DOUBLE };
+    BuiltInDTypeId dTypes[8] = { SS_DOUBLE, SS_DOUBLE, SS_DOUBLE, SS_DOUBLE,
+      SS_DOUBLE, SS_DOUBLE, SS_DOUBLE, SS_DOUBLE };
 
     static char_T rt_ScopeBlockName[] = "rpdriver/PlotState";
-    static int_T rt_ScopeFrameData[] = { 0, 0, 0, 0, 0, 0, 0 };
+    static int_T rt_ScopeFrameData[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     static RTWPreprocessingFcnPtr rt_ScopeSignalLoggingPreprocessingFcnPtrs[] =
       {
-      (NULL), (NULL), (NULL), (NULL), (NULL), (NULL), (NULL)
+      (NULL), (NULL), (NULL), (NULL), (NULL), (NULL), (NULL), (NULL)
     };
 
-    rt_ScopeSignalInfo.numSignals = 7;
+    rt_ScopeSignalInfo.numSignals = 8;
     rt_ScopeSignalInfo.numCols = rt_ScopeSignalWidths;
     rt_ScopeSignalInfo.numDims = rt_ScopeSignalNumDimensions;
     rt_ScopeSignalInfo.dims = rt_ScopeSignalDimensions;
@@ -886,7 +977,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "sprawdzenie_napiecia",
+      "LQR_pomiary_stanu_1",
       1,
       0,
       1,
@@ -894,6 +985,78 @@ void rpdriver_initialize(void)
       &rt_ScopeSignalInfo,
       rt_ScopeBlockName);
     if (rpdriver_DW.PlotState_PWORK.LoggedData[0] == (NULL))
+      return;
+  }
+
+  /* Start for Scope: '<Root>/Scope' */
+  {
+    RTWLogSignalInfo rt_ScopeSignalInfo;
+    static int_T rt_ScopeSignalWidths[] = { 1, 1, 1, 1 };
+
+    static int_T rt_ScopeSignalNumDimensions[] = { 1, 1, 1, 1 };
+
+    static int_T rt_ScopeSignalDimensions[] = { 1, 1, 1, 1 };
+
+    static void *rt_ScopeCurrSigDims[] = { (NULL), (NULL), (NULL), (NULL) };
+
+    static int_T rt_ScopeCurrSigDimsSize[] = { 4, 4, 4, 4 };
+
+    static const char_T *rt_ScopeSignalLabels[] = { "",
+      "",
+      "",
+      "" };
+
+    static char_T rt_ScopeSignalTitles[] = "";
+    static int_T rt_ScopeSignalTitleLengths[] = { 0, 0, 0, 0 };
+
+    static boolean_T rt_ScopeSignalIsVarDims[] = { 0, 0, 0, 0 };
+
+    static int_T rt_ScopeSignalPlotStyles[] = { 1, 1, 1, 1 };
+
+    BuiltInDTypeId dTypes[4] = { SS_DOUBLE, SS_DOUBLE, SS_DOUBLE, SS_DOUBLE };
+
+    static char_T rt_ScopeBlockName[] = "rpdriver/Scope";
+    static int_T rt_ScopeFrameData[] = { 0, 0, 0, 0 };
+
+    static RTWPreprocessingFcnPtr rt_ScopeSignalLoggingPreprocessingFcnPtrs[] =
+      {
+      (NULL), (NULL), (NULL), (NULL)
+    };
+
+    rt_ScopeSignalInfo.numSignals = 4;
+    rt_ScopeSignalInfo.numCols = rt_ScopeSignalWidths;
+    rt_ScopeSignalInfo.numDims = rt_ScopeSignalNumDimensions;
+    rt_ScopeSignalInfo.dims = rt_ScopeSignalDimensions;
+    rt_ScopeSignalInfo.isVarDims = rt_ScopeSignalIsVarDims;
+    rt_ScopeSignalInfo.currSigDims = rt_ScopeCurrSigDims;
+    rt_ScopeSignalInfo.currSigDimsSize = rt_ScopeCurrSigDimsSize;
+    rt_ScopeSignalInfo.dataTypes = dTypes;
+    rt_ScopeSignalInfo.complexSignals = (NULL);
+    rt_ScopeSignalInfo.frameData = rt_ScopeFrameData;
+    rt_ScopeSignalInfo.preprocessingPtrs =
+      rt_ScopeSignalLoggingPreprocessingFcnPtrs;
+    rt_ScopeSignalInfo.labels.cptr = rt_ScopeSignalLabels;
+    rt_ScopeSignalInfo.titles = rt_ScopeSignalTitles;
+    rt_ScopeSignalInfo.titleLengths = rt_ScopeSignalTitleLengths;
+    rt_ScopeSignalInfo.plotStyles = rt_ScopeSignalPlotStyles;
+    rt_ScopeSignalInfo.blockNames.cptr = (NULL);
+    rt_ScopeSignalInfo.stateNames.cptr = (NULL);
+    rt_ScopeSignalInfo.crossMdlRef = (NULL);
+    rt_ScopeSignalInfo.dataTypeConvert = (NULL);
+    rpdriver_DW.Scope_PWORK.LoggedData[0] = rt_CreateStructLogVar(
+      rpdriver_M->rtwLogInfo,
+      0.0,
+      rtmGetTFinal(rpdriver_M),
+      rpdriver_M->Timing.stepSize0,
+      (&rtmGetErrorStatus(rpdriver_M)),
+      "Sterowania_lqr_1",
+      1,
+      0,
+      1,
+      0.01,
+      &rt_ScopeSignalInfo,
+      rt_ScopeBlockName);
+    if (rpdriver_DW.Scope_PWORK.LoggedData[0] == (NULL))
       return;
   }
 
