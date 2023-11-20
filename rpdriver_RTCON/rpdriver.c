@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.344
+ * Model version              : 1.345
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Nov 20 10:44:54 2023
+ * C source code generated on : Mon Nov 20 11:01:14 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -504,10 +504,10 @@ void rpdriver_initialize(void)
   }
 
   /* External mode info */
-  rpdriver_M->Sizes.checksums[0] = (3039729901U);
-  rpdriver_M->Sizes.checksums[1] = (3516787895U);
-  rpdriver_M->Sizes.checksums[2] = (1320134685U);
-  rpdriver_M->Sizes.checksums[3] = (3681578796U);
+  rpdriver_M->Sizes.checksums[0] = (4158064472U);
+  rpdriver_M->Sizes.checksums[1] = (3874858511U);
+  rpdriver_M->Sizes.checksums[2] = (4200038093U);
+  rpdriver_M->Sizes.checksums[3] = (1401664833U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -916,7 +916,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "test4_stan_oscylacyjny",
+      "test6_wahadlo_pionowe",
       1,
       0,
       1,
@@ -988,7 +988,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "test_4_oscylacyjne_sterowanie",
+      "test_6_wahadlo_pionowe",
       1,
       0,
       1,
