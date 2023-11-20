@@ -9,7 +9,7 @@
  *
  * Model version              : 1.343
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Nov 20 08:59:21 2023
+ * C source code generated on : Mon Nov 20 10:16:16 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -30,7 +30,7 @@ P_rpdriver_T rpdriver_P = {
    *   '<Root>/Gain4'
    *   '<Root>/Gain5'
    */
-  { -7.3047583422032858, -3.4170245674483226, 0.018248245019784864 },
+  { -0.50339223038227721, -0.038455852097792141, 0.012277875891347781 },
 
   /* Expression: 0
    * Referenced by: '<Root>/DC_Ctrl2'

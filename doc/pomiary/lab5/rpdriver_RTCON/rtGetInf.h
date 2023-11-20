@@ -9,7 +9,7 @@
  *
  * Model version              : 1.343
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Nov 20 08:59:21 2023
+ * C source code generated on : Mon Nov 20 10:16:16 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping

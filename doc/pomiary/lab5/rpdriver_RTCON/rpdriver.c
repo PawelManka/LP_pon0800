@@ -9,7 +9,7 @@
  *
  * Model version              : 1.343
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Nov 20 08:59:21 2023
+ * C source code generated on : Mon Nov 20 10:16:16 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -504,10 +504,10 @@ void rpdriver_initialize(void)
   }
 
   /* External mode info */
-  rpdriver_M->Sizes.checksums[0] = (2582009929U);
-  rpdriver_M->Sizes.checksums[1] = (3579302495U);
-  rpdriver_M->Sizes.checksums[2] = (623256540U);
-  rpdriver_M->Sizes.checksums[3] = (3991157604U);
+  rpdriver_M->Sizes.checksums[0] = (3039729901U);
+  rpdriver_M->Sizes.checksums[1] = (3516787895U);
+  rpdriver_M->Sizes.checksums[2] = (1320134685U);
+  rpdriver_M->Sizes.checksums[3] = (3681578796U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -916,7 +916,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "LQR_pomiary_stanu_6",
+      "test4_stan_oscylacyjny",
       1,
       0,
       1,
@@ -988,7 +988,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "Sterowania_lqr_6",
+      "test_4_oscylacyjne_sterowanie",
       1,
       0,
       1,
