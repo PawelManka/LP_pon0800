@@ -101,7 +101,7 @@ COMPILER_TOOL_CHAIN = vcx64
 #  USE_REALTIME_PRIORITY - Boost the priority to the REALTIME_PRIORITY class
 
 MODEL                = rpdriver
-MODULES              = rt_matrx.c rt_printf.c rt_logging.c rpdriver_data.c rtGetInf.c rtGetNaN.c rt_look.c rt_look1d.c rt_nonfinite.c
+MODULES              = rt_matrx.c rt_printf.c rt_logging.c rpdriver_data.c rtGetInf.c rtGetNaN.c rt_nonfinite.c
 MAKEFILE             = rpdriver.mk
 MATLAB_ROOT          = C:\Program Files\MATLAB\R2018b
 ALT_MATLAB_ROOT      = C:\PROGRA~1\MATLAB\R2018b

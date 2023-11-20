@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.339
+ * Model version              : 1.344
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Wed Nov  8 10:17:30 2023
+ * C source code generated on : Mon Nov 20 10:44:54 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -30,7 +30,7 @@ P_rpdriver_T rpdriver_P = {
    *   '<Root>/Gain4'
    *   '<Root>/Gain5'
    */
-  { -0.19307617068903526, -0.12520877713098358, 0.0018378656340422201 },
+  { -0.50339223038227721, -0.038455852097792141, 0.012277875891347781 },
 
   /* Expression: 0
    * Referenced by: '<Root>/DC_Ctrl2'
@@ -52,10 +52,10 @@ P_rpdriver_T rpdriver_P = {
    */
   1.0,
 
-  /* Expression: 0
+  /* Expression: 0.1
    * Referenced by: '<Root>/DC_Ctrl1'
    */
-  0.0,
+  0.1,
 
   /* Expression: 0
    * Referenced by: '<Root>/Normal'
@@ -137,10 +137,10 @@ P_rpdriver_T rpdriver_P = {
    */
   1.0,
 
-  /* Expression: [0 0 0]
+  /* Expression: [3.14 0 0]
    * Referenced by: '<Root>/x_ep'
    */
-  { 0.0, 0.0, 0.0 },
+  { 3.14, 0.0, 0.0 },
 
   /* Expression: 0
    * Referenced by: '<Root>/Constant1'
@@ -179,31 +179,6 @@ P_rpdriver_T rpdriver_P = {
 
   /* Expression: 0
    * Referenced by: '<S1>/ThermFlag'
-   */
-  0.0,
-
-  /* Expression: sps.tv
-   * Referenced by: '<S4>/Look-Up Table'
-   */
-  { 0.0, 5.0, 5.0, 10.0, 10.0, 15.0, 15.0, 20.0, 20.0, 25.0, 25.0, 30.0, 30.0,
-    35.0, 35.0, 40.0, 40.0, 45.0, 45.0, 50.0, 50.0, 55.0, 55.0, 60.0, 60.0, 65.0,
-    65.0, 70.0, 70.0, 75.0, 75.0, 80.0, 80.0, 85.0, 85.0, 90.0, 90.0, 95.0, 95.0,
-    100.0, 100.0, 101.0 },
-
-  /* Expression: sps.opv
-   * Referenced by: '<S4>/Look-Up Table'
-   */
-  { -1.0, -1.0, -0.9, -0.9, -0.8, -0.8, -0.7, -0.7, -0.6, -0.6, -0.5, -0.5,
-    -0.39999999999999991, -0.39999999999999991, -0.29999999999999993,
-    -0.29999999999999993, -0.19999999999999996, -0.19999999999999996,
-    -0.099999999999999978, -0.099999999999999978, 0.0, 0.0, 0.099999999999999978,
-    0.099999999999999978, 0.19999999999999996, 0.19999999999999996,
-    0.29999999999999993, 0.29999999999999993, 0.39999999999999991,
-    0.39999999999999991, 0.5, 0.5, 0.6, 0.6, 0.7, 0.7, 0.8, 0.8, 0.9, 0.9, 1.0,
-    1.0 },
-
-  /* Expression: 0
-   * Referenced by: '<S4>/Hit  Crossing'
    */
   0.0,
 

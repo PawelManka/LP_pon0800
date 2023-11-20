@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.339
+ * Model version              : 1.344
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Wed Nov  8 10:17:30 2023
+ * C source code generated on : Mon Nov 20 10:44:54 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -38,11 +38,9 @@
 
 /* Shared type includes */
 #include "multiword_types.h"
-#include "rtGetInf.h"
-#include "rt_nonfinite.h"
 #include "rt_defines.h"
-#include "rt_look.h"
-#include "rt_look1d.h"
+#include "rt_nonfinite.h"
+#include "rtGetInf.h"
 
 /* Macros for accessing real-time model data structure */
 #ifndef rtmGetContTimeOutputInconsistentWithStateAtMajorStepFlag
@@ -160,8 +158,6 @@ typedef struct {
   real_T Prescaler;                    /* '<S1>/Prescaler' */
   real_T Saturation;                   /* '<S1>/Saturation' */
   real_T ThermFlag;                    /* '<S1>/ThermFlag' */
-  real_T LookUpTable;                  /* '<S4>/Look-Up Table' */
-  real_T Derivative;                   /* '<S4>/Derivative' */
 } B_rpdriver_T;
 
 /* Block states (default storage) for system '<Root>' */
@@ -169,10 +165,6 @@ typedef struct {
   real_T Memory2_PreviousInput;        /* '<S1>/Memory2' */
   real_T Memory_PreviousInput;         /* '<S1>/Memory' */
   real_T Memory1_PreviousInput;        /* '<S1>/Memory1' */
-  real_T TimeStampA;                   /* '<S4>/Derivative' */
-  real_T LastUAtTimeA;                 /* '<S4>/Derivative' */
-  real_T TimeStampB;                   /* '<S4>/Derivative' */
-  real_T LastUAtTimeB;                 /* '<S4>/Derivative' */
   struct {
     void *LoggedData[8];
   } PlotState_PWORK;                   /* '<Root>/PlotState' */
@@ -207,7 +199,7 @@ struct P_rpdriver_T_ {
   real_T Gain1_Gain;                   /* Expression: 1
                                         * Referenced by: '<Root>/Gain1'
                                         */
-  real_T DC_Ctrl1_Value;               /* Expression: 0
+  real_T DC_Ctrl1_Value;               /* Expression: 0.1
                                         * Referenced by: '<Root>/DC_Ctrl1'
                                         */
   real_T Normal_Value;                 /* Expression: 0
@@ -258,7 +250,7 @@ struct P_rpdriver_T_ {
   real_T DCConverttoA1_Gain;           /* Expression: 1
                                         * Referenced by: '<S1>/DC Convert to [A]1'
                                         */
-  real_T x_ep_Value[3];                /* Expression: [0 0 0]
+  real_T x_ep_Value[3];                /* Expression: [3.14 0 0]
                                         * Referenced by: '<Root>/x_ep'
                                         */
   real_T Constant1_Value;              /* Expression: 0
@@ -284,15 +276,6 @@ struct P_rpdriver_T_ {
                                         */
   real_T ThermFlag_Value;              /* Expression: 0
                                         * Referenced by: '<S1>/ThermFlag'
-                                        */
-  real_T LookUpTable_XData[42];        /* Expression: sps.tv
-                                        * Referenced by: '<S4>/Look-Up Table'
-                                        */
-  real_T LookUpTable_YData[42];        /* Expression: sps.opv
-                                        * Referenced by: '<S4>/Look-Up Table'
-                                        */
-  real_T HitCrossing_Offset;           /* Expression: 0
-                                        * Referenced by: '<S4>/Hit  Crossing'
                                         */
   uint8_T ResetEncoders2_CurrentSetting;/* Computed Parameter: ResetEncoders2_CurrentSetting
                                          * Referenced by: '<Root>/Reset Encoders2'

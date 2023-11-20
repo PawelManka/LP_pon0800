@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.339
+ * Model version              : 1.344
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Wed Nov  8 10:17:30 2023
+ * C source code generated on : Mon Nov 20 10:44:54 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -70,357 +70,296 @@ real_T rt_atan2d_snf(real_T u0, real_T u1)
 /* Model step function */
 void rpdriver_step(void)
 {
+  real_T rtb_Gain2;
+  real_T Gain_tmp;
+  real_T Gain_tmp_0;
+  real_T Gain_tmp_1;
+
+  /* S-Function (rtdacusb2_rpend_dd): '<S1>/S-Function' */
+
+  /* Level2 S-Function Block: '<S1>/S-Function' (rtdacusb2_rpend_dd) */
   {
-    real_T *lastU;
-    real_T rtb_Gain2;
-    real_T Gain_tmp;
-    real_T Gain_tmp_0;
-    real_T Gain_tmp_1;
+    SimStruct *rts = rpdriver_M->childSfunctions[0];
+    sfcnOutputs(rts,1);
+  }
 
-    /* S-Function (rtdacusb2_rpend_dd): '<S1>/S-Function' */
+  /* Gain: '<S1>/Pendulum Convert to rad' */
+  rpdriver_B.PendulumAnglerad = rpdriver_P.PendulumConverttorad_Gain *
+    rpdriver_B.SFunction_o2;
 
-    /* Level2 S-Function Block: '<S1>/S-Function' (rtdacusb2_rpend_dd) */
-    {
-      SimStruct *rts = rpdriver_M->childSfunctions[0];
-      sfcnOutputs(rts,1);
-    }
+  /* Trigonometry: '<S3>/Trigonometric Function' incorporates:
+   *  Trigonometry: '<S3>/Trigonometric Function1'
+   *  Trigonometry: '<S3>/Trigonometric Function2'
+   */
+  rpdriver_B.PendPos_ZeroDown = rt_atan2d_snf(sin(rpdriver_B.PendulumAnglerad),
+    cos(rpdriver_B.PendulumAnglerad));
 
-    /* Gain: '<S1>/Pendulum Convert to rad' */
-    rpdriver_B.PendulumAnglerad = rpdriver_P.PendulumConverttorad_Gain *
-      rpdriver_B.SFunction_o2;
+  /* Sum: '<S3>/Add' incorporates:
+   *  Constant: '<S3>/Constant'
+   */
+  rtb_Gain2 = rpdriver_B.PendulumAnglerad + rpdriver_P.Constant_Value;
 
-    /* Trigonometry: '<S3>/Trigonometric Function' incorporates:
-     *  Trigonometry: '<S3>/Trigonometric Function1'
-     *  Trigonometry: '<S3>/Trigonometric Function2'
+  /* Trigonometry: '<S3>/Trigonometric Function3' incorporates:
+   *  Trigonometry: '<S3>/Trigonometric Function4'
+   *  Trigonometry: '<S3>/Trigonometric Function5'
+   */
+  rpdriver_B.PendPos_ZeroUp = rt_atan2d_snf(sin(rtb_Gain2), cos(rtb_Gain2));
+
+  /* Gain: '<S1>/Gain1' incorporates:
+   *  Memory: '<S1>/Memory'
+   *  Sum: '<S1>/Add'
+   */
+  rpdriver_B.Periodms = (rpdriver_B.SFunction_o6 -
+    rpdriver_DW.Memory_PreviousInput) * rpdriver_P.Gain1_Gain_h;
+
+  /* Product: '<S1>/Divide1' incorporates:
+   *  Gain: '<S1>/rad2rad//s'
+   *  Memory: '<S1>/Memory2'
+   *  Sum: '<S1>/Add2'
+   */
+  rpdriver_B.PendulumVelrads = (rpdriver_B.PendulumAnglerad -
+    rpdriver_DW.Memory2_PreviousInput) * rpdriver_P.rad2rads_Gain /
+    rpdriver_B.Periodms;
+
+  /* Gain: '<S1>/DC Convert to rad' */
+  rpdriver_B.DCAnglerad = rpdriver_P.DCConverttorad_Gain *
+    rpdriver_B.SFunction_o3;
+
+  /* Product: '<S1>/Divide' incorporates:
+   *  Gain: '<S1>/rad2RPM'
+   *  Memory: '<S1>/Memory1'
+   *  Sum: '<S1>/Add1'
+   */
+  rpdriver_B.DCVelrads = (rpdriver_B.DCAnglerad -
+    rpdriver_DW.Memory1_PreviousInput) * rpdriver_P.rad2RPM_Gain /
+    rpdriver_B.Periodms;
+
+  /* Gain: '<S1>/DC Convert to [A]1' */
+  rpdriver_B.DCConverttoA1 = rpdriver_P.DCConverttoA1_Gain *
+    rpdriver_B.SFunction_o4;
+
+  /* Gain: '<Root>/Gain' incorporates:
+   *  Constant: '<Root>/x_ep'
+   *  Gain: '<Root>/Gain2'
+   *  Gain: '<Root>/Gain4'
+   *  Gain: '<Root>/Gain5'
+   *  Sum: '<Root>/Sum1'
+   */
+  Gain_tmp = rpdriver_P.K[0] * (rpdriver_B.PendulumAnglerad -
+    rpdriver_P.x_ep_Value[0]);
+  Gain_tmp_0 = rpdriver_P.K[1] * (rpdriver_B.PendulumVelrads -
+    rpdriver_P.x_ep_Value[1]);
+  Gain_tmp_1 = rpdriver_P.K[2] * (rpdriver_B.DCVelrads - rpdriver_P.x_ep_Value[2]);
+  rpdriver_B.Gain = (Gain_tmp + Gain_tmp_0) + Gain_tmp_1;
+
+  /* Sum: '<Root>/Sum' incorporates:
+   *  Constant: '<Root>/Constant1'
+   */
+  rpdriver_B.Sum = rpdriver_P.Constant1_Value - rpdriver_B.Gain;
+
+  /* ManualSwitch: '<Root>/Reset Encoders1' incorporates:
+   *  Constant: '<Root>/DC_Ctrl2'
+   */
+  if (rpdriver_P.ResetEncoders1_CurrentSetting == 1) {
+    /* ManualSwitch: '<Root>/Reset Encoders2' incorporates:
+     *  Constant: '<Root>/DC_Ctrl1'
+     *  Gain: '<Root>/Gain1'
+     *  Saturate: '<Root>/Saturation'
      */
-    rpdriver_B.PendPos_ZeroDown = rt_atan2d_snf(sin(rpdriver_B.PendulumAnglerad),
-      cos(rpdriver_B.PendulumAnglerad));
-
-    /* Sum: '<S3>/Add' incorporates:
-     *  Constant: '<S3>/Constant'
-     */
-    rtb_Gain2 = rpdriver_B.PendulumAnglerad + rpdriver_P.Constant_Value;
-
-    /* Trigonometry: '<S3>/Trigonometric Function3' incorporates:
-     *  Trigonometry: '<S3>/Trigonometric Function4'
-     *  Trigonometry: '<S3>/Trigonometric Function5'
-     */
-    rpdriver_B.PendPos_ZeroUp = rt_atan2d_snf(sin(rtb_Gain2), cos(rtb_Gain2));
-
-    /* Gain: '<S1>/Gain1' incorporates:
-     *  Memory: '<S1>/Memory'
-     *  Sum: '<S1>/Add'
-     */
-    rpdriver_B.Periodms = (rpdriver_B.SFunction_o6 -
-      rpdriver_DW.Memory_PreviousInput) * rpdriver_P.Gain1_Gain_h;
-
-    /* Product: '<S1>/Divide1' incorporates:
-     *  Gain: '<S1>/rad2rad//s'
-     *  Memory: '<S1>/Memory2'
-     *  Sum: '<S1>/Add2'
-     */
-    rpdriver_B.PendulumVelrads = (rpdriver_B.PendulumAnglerad -
-      rpdriver_DW.Memory2_PreviousInput) * rpdriver_P.rad2rads_Gain /
-      rpdriver_B.Periodms;
-
-    /* Gain: '<S1>/DC Convert to rad' */
-    rpdriver_B.DCAnglerad = rpdriver_P.DCConverttorad_Gain *
-      rpdriver_B.SFunction_o3;
-
-    /* Product: '<S1>/Divide' incorporates:
-     *  Gain: '<S1>/rad2RPM'
-     *  Memory: '<S1>/Memory1'
-     *  Sum: '<S1>/Add1'
-     */
-    rpdriver_B.DCVelrads = (rpdriver_B.DCAnglerad -
-      rpdriver_DW.Memory1_PreviousInput) * rpdriver_P.rad2RPM_Gain /
-      rpdriver_B.Periodms;
-
-    /* Gain: '<S1>/DC Convert to [A]1' */
-    rpdriver_B.DCConverttoA1 = rpdriver_P.DCConverttoA1_Gain *
-      rpdriver_B.SFunction_o4;
-
-    /* Gain: '<Root>/Gain' incorporates:
-     *  Constant: '<Root>/x_ep'
-     *  Gain: '<Root>/Gain2'
-     *  Gain: '<Root>/Gain4'
-     *  Gain: '<Root>/Gain5'
-     *  Sum: '<Root>/Sum1'
-     */
-    Gain_tmp = rpdriver_P.K[0] * (rpdriver_B.PendulumAnglerad -
-      rpdriver_P.x_ep_Value[0]);
-    Gain_tmp_0 = rpdriver_P.K[1] * (rpdriver_B.PendulumVelrads -
-      rpdriver_P.x_ep_Value[1]);
-    Gain_tmp_1 = rpdriver_P.K[2] * (rpdriver_B.DCVelrads -
-      rpdriver_P.x_ep_Value[2]);
-    rpdriver_B.Gain = (Gain_tmp + Gain_tmp_0) + Gain_tmp_1;
-
-    /* Sum: '<Root>/Sum' incorporates:
-     *  Constant: '<Root>/Constant1'
-     */
-    rpdriver_B.Sum = rpdriver_P.Constant1_Value - rpdriver_B.Gain;
-
-    /* ManualSwitch: '<Root>/Reset Encoders1' incorporates:
-     *  Constant: '<Root>/DC_Ctrl2'
-     */
-    if (rpdriver_P.ResetEncoders1_CurrentSetting == 1) {
-      /* ManualSwitch: '<Root>/Reset Encoders2' incorporates:
-       *  Constant: '<Root>/DC_Ctrl1'
-       *  Gain: '<Root>/Gain1'
-       *  Saturate: '<Root>/Saturation'
-       */
-      if (rpdriver_P.ResetEncoders2_CurrentSetting == 1) {
-        rtb_Gain2 = rpdriver_P.DC_Ctrl1_Value;
+    if (rpdriver_P.ResetEncoders2_CurrentSetting == 1) {
+      rtb_Gain2 = rpdriver_P.DC_Ctrl1_Value;
+    } else {
+      if (rpdriver_B.Sum > rpdriver_P.Saturation_UpperSat) {
+        /* Saturate: '<Root>/Saturation' */
+        rtb_Gain2 = rpdriver_P.Saturation_UpperSat;
+      } else if (rpdriver_B.Sum < rpdriver_P.Saturation_LowerSat) {
+        /* Saturate: '<Root>/Saturation' */
+        rtb_Gain2 = rpdriver_P.Saturation_LowerSat;
       } else {
-        if (rpdriver_B.Sum > rpdriver_P.Saturation_UpperSat) {
-          /* Saturate: '<Root>/Saturation' */
-          rtb_Gain2 = rpdriver_P.Saturation_UpperSat;
-        } else if (rpdriver_B.Sum < rpdriver_P.Saturation_LowerSat) {
-          /* Saturate: '<Root>/Saturation' */
-          rtb_Gain2 = rpdriver_P.Saturation_LowerSat;
-        } else {
-          /* Saturate: '<Root>/Saturation' */
-          rtb_Gain2 = rpdriver_B.Sum;
-        }
-
-        rtb_Gain2 *= rpdriver_P.Gain1_Gain;
+        /* Saturate: '<Root>/Saturation' */
+        rtb_Gain2 = rpdriver_B.Sum;
       }
 
-      /* End of ManualSwitch: '<Root>/Reset Encoders2' */
-    } else {
-      rtb_Gain2 = rpdriver_P.DC_Ctrl2_Value;
+      rtb_Gain2 *= rpdriver_P.Gain1_Gain;
     }
 
-    /* End of ManualSwitch: '<Root>/Reset Encoders1' */
+    /* End of ManualSwitch: '<Root>/Reset Encoders2' */
+  } else {
+    rtb_Gain2 = rpdriver_P.DC_Ctrl2_Value;
+  }
 
-    /* Gain: '<Root>/Gain3' */
-    rpdriver_B.Control = rpdriver_P.Gain3_Gain * rtb_Gain2;
+  /* End of ManualSwitch: '<Root>/Reset Encoders1' */
 
-    /* Scope: '<Root>/PlotState' */
+  /* Gain: '<Root>/Gain3' */
+  rpdriver_B.Control = rpdriver_P.Gain3_Gain * rtb_Gain2;
+
+  /* Scope: '<Root>/PlotState' */
+  {
+    StructLogVar *svar = (StructLogVar *)rpdriver_DW.PlotState_PWORK.LoggedData
+      [0];
+    LogVar *var = svar->signals.values;
+
+    /* time */
     {
-      StructLogVar *svar = (StructLogVar *)
-        rpdriver_DW.PlotState_PWORK.LoggedData[0];
-      LogVar *var = svar->signals.values;
-
-      /* time */
-      {
-        double locTime = rpdriver_M->Timing.t[1];
-        ;
-        rt_UpdateLogVar((LogVar *)svar->time, &locTime, 0);
-      }
-
-      /* signals */
-      {
-        real_T up0[1];
-        up0[0] = rpdriver_B.PendulumAnglerad;
-        rt_UpdateLogVar((LogVar *)var, up0, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up1[1];
-        up1[0] = rpdriver_B.PendPos_ZeroDown;
-        rt_UpdateLogVar((LogVar *)var, up1, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up2[1];
-        up2[0] = rpdriver_B.PendPos_ZeroUp;
-        rt_UpdateLogVar((LogVar *)var, up2, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up3[1];
-        up3[0] = rpdriver_B.PendulumVelrads;
-        rt_UpdateLogVar((LogVar *)var, up3, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up4[1];
-        up4[0] = rpdriver_B.DCAnglerad;
-        rt_UpdateLogVar((LogVar *)var, up4, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up5[1];
-        up5[0] = rpdriver_B.DCVelrads;
-        rt_UpdateLogVar((LogVar *)var, up5, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up6[1];
-        up6[0] = rpdriver_B.DCConverttoA1;
-        rt_UpdateLogVar((LogVar *)var, up6, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up7[1];
-        up7[0] = rpdriver_B.Control;
-        rt_UpdateLogVar((LogVar *)var, up7, 0);
-      }
+      double locTime = rpdriver_M->Timing.t[1];
+      ;
+      rt_UpdateLogVar((LogVar *)svar->time, &locTime, 0);
     }
 
-    /* Gain: '<Root>/Gain2' */
-    rpdriver_B.Gain2 = Gain_tmp;
-
-    /* Gain: '<Root>/Gain4' */
-    rpdriver_B.Gain4 = Gain_tmp_0;
-
-    /* Gain: '<Root>/Gain5' */
-    rpdriver_B.Gain5 = Gain_tmp_1;
-
-    /* Scope: '<Root>/Scope' */
+    /* signals */
     {
-      StructLogVar *svar = (StructLogVar *)rpdriver_DW.Scope_PWORK.LoggedData[0];
-      LogVar *var = svar->signals.values;
-
-      /* time */
-      {
-        double locTime = rpdriver_M->Timing.t[1];
-        ;
-        rt_UpdateLogVar((LogVar *)svar->time, &locTime, 0);
-      }
-
-      /* signals */
-      {
-        real_T up0[1];
-        up0[0] = rpdriver_B.Gain;
-        rt_UpdateLogVar((LogVar *)var, up0, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up1[1];
-        up1[0] = rpdriver_B.Gain2;
-        rt_UpdateLogVar((LogVar *)var, up1, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up2[1];
-        up2[0] = rpdriver_B.Gain4;
-        rt_UpdateLogVar((LogVar *)var, up2, 0);
-        var = var->next;
-      }
-
-      {
-        real_T up3[1];
-        up3[0] = rpdriver_B.Gain5;
-        rt_UpdateLogVar((LogVar *)var, up3, 0);
-      }
+      real_T up0[1];
+      up0[0] = rpdriver_B.PendulumAnglerad;
+      rt_UpdateLogVar((LogVar *)var, up0, 0);
+      var = var->next;
     }
 
-    /* ManualSwitch: '<Root>/Reset Encoders' incorporates:
-     *  Constant: '<Root>/Normal'
-     *  Constant: '<Root>/Reset'
-     */
-    if (rpdriver_P.ResetEncoders_CurrentSetting == 1) {
-      rtb_Gain2 = rpdriver_P.Reset_Value;
-    } else {
-      rtb_Gain2 = rpdriver_P.Normal_Value;
+    {
+      real_T up1[1];
+      up1[0] = rpdriver_B.PendPos_ZeroDown;
+      rt_UpdateLogVar((LogVar *)var, up1, 0);
+      var = var->next;
     }
 
-    /* End of ManualSwitch: '<Root>/Reset Encoders' */
-
-    /* Gain: '<S1>/Gain' */
-    rpdriver_B.Gain_j[0] = rpdriver_P.Gain_Gain[0] * rtb_Gain2;
-    rpdriver_B.Gain_j[1] = rpdriver_P.Gain_Gain[1] * rtb_Gain2;
-
-    /* Constant: '<S1>/Prescaler' */
-    rpdriver_B.Prescaler = rpdriver_P.Prescaler_Value;
-
-    /* Gain: '<S1>/Gain2' */
-    rtb_Gain2 = rpdriver_P.Gain2_Gain * rpdriver_B.Control;
-
-    /* Saturate: '<S1>/Saturation' */
-    if (rtb_Gain2 > rpdriver_P.Saturation_UpperSat_h) {
-      rpdriver_B.Saturation = rpdriver_P.Saturation_UpperSat_h;
-    } else if (rtb_Gain2 < rpdriver_P.Saturation_LowerSat_f) {
-      rpdriver_B.Saturation = rpdriver_P.Saturation_LowerSat_f;
-    } else {
-      rpdriver_B.Saturation = rtb_Gain2;
+    {
+      real_T up2[1];
+      up2[0] = rpdriver_B.PendPos_ZeroUp;
+      rt_UpdateLogVar((LogVar *)var, up2, 0);
+      var = var->next;
     }
 
-    /* End of Saturate: '<S1>/Saturation' */
+    {
+      real_T up3[1];
+      up3[0] = rpdriver_B.PendulumVelrads;
+      rt_UpdateLogVar((LogVar *)var, up3, 0);
+      var = var->next;
+    }
 
-    /* Constant: '<S1>/ThermFlag' */
-    rpdriver_B.ThermFlag = rpdriver_P.ThermFlag_Value;
+    {
+      real_T up4[1];
+      up4[0] = rpdriver_B.DCAnglerad;
+      rt_UpdateLogVar((LogVar *)var, up4, 0);
+      var = var->next;
+    }
 
-    /* Clock: '<S4>/Clock' incorporates:
-     *  Derivative: '<S4>/Derivative'
-     */
-    Gain_tmp = rpdriver_M->Timing.t[0];
+    {
+      real_T up5[1];
+      up5[0] = rpdriver_B.DCVelrads;
+      rt_UpdateLogVar((LogVar *)var, up5, 0);
+      var = var->next;
+    }
 
-    /* Lookup: '<S4>/Look-Up Table' incorporates:
-     *  Clock: '<S4>/Clock'
-     */
-    rpdriver_B.LookUpTable = rt_Lookup(rpdriver_P.LookUpTable_XData, 42,
-      Gain_tmp, rpdriver_P.LookUpTable_YData);
+    {
+      real_T up6[1];
+      up6[0] = rpdriver_B.DCConverttoA1;
+      rt_UpdateLogVar((LogVar *)var, up6, 0);
+      var = var->next;
+    }
 
-    /* Derivative: '<S4>/Derivative' */
-    if ((rpdriver_DW.TimeStampA >= Gain_tmp) && (rpdriver_DW.TimeStampB >=
-         Gain_tmp)) {
-      rpdriver_B.Derivative = 0.0;
-    } else {
-      rtb_Gain2 = rpdriver_DW.TimeStampA;
-      lastU = &rpdriver_DW.LastUAtTimeA;
-      if (rpdriver_DW.TimeStampA < rpdriver_DW.TimeStampB) {
-        if (rpdriver_DW.TimeStampB < Gain_tmp) {
-          rtb_Gain2 = rpdriver_DW.TimeStampB;
-          lastU = &rpdriver_DW.LastUAtTimeB;
-        }
-      } else {
-        if (rpdriver_DW.TimeStampA >= Gain_tmp) {
-          rtb_Gain2 = rpdriver_DW.TimeStampB;
-          lastU = &rpdriver_DW.LastUAtTimeB;
-        }
-      }
-
-      rpdriver_B.Derivative = (rpdriver_B.LookUpTable - *lastU) / (Gain_tmp -
-        rtb_Gain2);
+    {
+      real_T up7[1];
+      up7[0] = rpdriver_B.Control;
+      rt_UpdateLogVar((LogVar *)var, up7, 0);
     }
   }
+
+  /* Gain: '<Root>/Gain2' */
+  rpdriver_B.Gain2 = Gain_tmp;
+
+  /* Gain: '<Root>/Gain4' */
+  rpdriver_B.Gain4 = Gain_tmp_0;
+
+  /* Gain: '<Root>/Gain5' */
+  rpdriver_B.Gain5 = Gain_tmp_1;
+
+  /* Scope: '<Root>/Scope' */
+  {
+    StructLogVar *svar = (StructLogVar *)rpdriver_DW.Scope_PWORK.LoggedData[0];
+    LogVar *var = svar->signals.values;
+
+    /* time */
+    {
+      double locTime = rpdriver_M->Timing.t[1];
+      ;
+      rt_UpdateLogVar((LogVar *)svar->time, &locTime, 0);
+    }
+
+    /* signals */
+    {
+      real_T up0[1];
+      up0[0] = rpdriver_B.Gain;
+      rt_UpdateLogVar((LogVar *)var, up0, 0);
+      var = var->next;
+    }
+
+    {
+      real_T up1[1];
+      up1[0] = rpdriver_B.Gain2;
+      rt_UpdateLogVar((LogVar *)var, up1, 0);
+      var = var->next;
+    }
+
+    {
+      real_T up2[1];
+      up2[0] = rpdriver_B.Gain4;
+      rt_UpdateLogVar((LogVar *)var, up2, 0);
+      var = var->next;
+    }
+
+    {
+      real_T up3[1];
+      up3[0] = rpdriver_B.Gain5;
+      rt_UpdateLogVar((LogVar *)var, up3, 0);
+    }
+  }
+
+  /* ManualSwitch: '<Root>/Reset Encoders' incorporates:
+   *  Constant: '<Root>/Normal'
+   *  Constant: '<Root>/Reset'
+   */
+  if (rpdriver_P.ResetEncoders_CurrentSetting == 1) {
+    rtb_Gain2 = rpdriver_P.Reset_Value;
+  } else {
+    rtb_Gain2 = rpdriver_P.Normal_Value;
+  }
+
+  /* End of ManualSwitch: '<Root>/Reset Encoders' */
+
+  /* Gain: '<S1>/Gain' */
+  rpdriver_B.Gain_j[0] = rpdriver_P.Gain_Gain[0] * rtb_Gain2;
+  rpdriver_B.Gain_j[1] = rpdriver_P.Gain_Gain[1] * rtb_Gain2;
+
+  /* Constant: '<S1>/Prescaler' */
+  rpdriver_B.Prescaler = rpdriver_P.Prescaler_Value;
+
+  /* Gain: '<S1>/Gain2' */
+  Gain_tmp = rpdriver_P.Gain2_Gain * rpdriver_B.Control;
+
+  /* Saturate: '<S1>/Saturation' */
+  if (Gain_tmp > rpdriver_P.Saturation_UpperSat_h) {
+    rpdriver_B.Saturation = rpdriver_P.Saturation_UpperSat_h;
+  } else if (Gain_tmp < rpdriver_P.Saturation_LowerSat_f) {
+    rpdriver_B.Saturation = rpdriver_P.Saturation_LowerSat_f;
+  } else {
+    rpdriver_B.Saturation = Gain_tmp;
+  }
+
+  /* End of Saturate: '<S1>/Saturation' */
+
+  /* Constant: '<S1>/ThermFlag' */
+  rpdriver_B.ThermFlag = rpdriver_P.ThermFlag_Value;
 
   /* Matfile logging */
   rt_UpdateTXYLogVars(rpdriver_M->rtwLogInfo, (rpdriver_M->Timing.t));
 
-  {
-    real_T *lastU;
+  /* Update for Memory: '<S1>/Memory2' */
+  rpdriver_DW.Memory2_PreviousInput = rpdriver_B.PendulumAnglerad;
 
-    /* Update for Memory: '<S1>/Memory2' */
-    rpdriver_DW.Memory2_PreviousInput = rpdriver_B.PendulumAnglerad;
+  /* Update for Memory: '<S1>/Memory' */
+  rpdriver_DW.Memory_PreviousInput = rpdriver_B.SFunction_o6;
 
-    /* Update for Memory: '<S1>/Memory' */
-    rpdriver_DW.Memory_PreviousInput = rpdriver_B.SFunction_o6;
-
-    /* Update for Memory: '<S1>/Memory1' */
-    rpdriver_DW.Memory1_PreviousInput = rpdriver_B.DCAnglerad;
-
-    /* Update for Derivative: '<S4>/Derivative' */
-    if (rpdriver_DW.TimeStampA == (rtInf)) {
-      rpdriver_DW.TimeStampA = rpdriver_M->Timing.t[0];
-      lastU = &rpdriver_DW.LastUAtTimeA;
-    } else if (rpdriver_DW.TimeStampB == (rtInf)) {
-      rpdriver_DW.TimeStampB = rpdriver_M->Timing.t[0];
-      lastU = &rpdriver_DW.LastUAtTimeB;
-    } else if (rpdriver_DW.TimeStampA < rpdriver_DW.TimeStampB) {
-      rpdriver_DW.TimeStampA = rpdriver_M->Timing.t[0];
-      lastU = &rpdriver_DW.LastUAtTimeA;
-    } else {
-      rpdriver_DW.TimeStampB = rpdriver_M->Timing.t[0];
-      lastU = &rpdriver_DW.LastUAtTimeB;
-    }
-
-    *lastU = rpdriver_B.LookUpTable;
-
-    /* End of Update for Derivative: '<S4>/Derivative' */
-  }
+  /* Update for Memory: '<S1>/Memory1' */
+  rpdriver_DW.Memory1_PreviousInput = rpdriver_B.DCAnglerad;
 
   /* External mode */
   rtExtModeUploadCheckTrigger(2);
@@ -565,10 +504,10 @@ void rpdriver_initialize(void)
   }
 
   /* External mode info */
-  rpdriver_M->Sizes.checksums[0] = (2839709376U);
-  rpdriver_M->Sizes.checksums[1] = (3946555173U);
-  rpdriver_M->Sizes.checksums[2] = (713148146U);
-  rpdriver_M->Sizes.checksums[3] = (1681574305U);
+  rpdriver_M->Sizes.checksums[0] = (3039729901U);
+  rpdriver_M->Sizes.checksums[1] = (3516787895U);
+  rpdriver_M->Sizes.checksums[2] = (1320134685U);
+  rpdriver_M->Sizes.checksums[3] = (3681578796U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -977,7 +916,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "LQR_pomiary_stanu_1",
+      "test4_stan_oscylacyjny",
       1,
       0,
       1,
@@ -1049,7 +988,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "Sterowania_lqr_1",
+      "test_4_oscylacyjne_sterowanie",
       1,
       0,
       1,
@@ -1074,10 +1013,6 @@ void rpdriver_initialize(void)
 
   /* InitializeConditions for Memory: '<S1>/Memory1' */
   rpdriver_DW.Memory1_PreviousInput = rpdriver_P.Memory1_InitialCondition;
-
-  /* InitializeConditions for Derivative: '<S4>/Derivative' */
-  rpdriver_DW.TimeStampA = (rtInf);
-  rpdriver_DW.TimeStampB = (rtInf);
 }
 
 /* Model terminate function */

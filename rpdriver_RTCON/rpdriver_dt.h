@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.339
+ * Model version              : 1.344
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Wed Nov  8 10:17:30 2023
+ * C source code generated on : Mon Nov 20 10:44:54 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -58,10 +58,10 @@ static const char_T * rtDataTypeNames[] = {
 
 /* data type transitions for block I/O structure */
 static DataTypeTransition rtBTransitions[] = {
-  { (char_T *)(&rpdriver_B.SFunction_o1), 0, 0, 29 }
+  { (char_T *)(&rpdriver_B.SFunction_o1), 0, 0, 27 }
   ,
 
-  { (char_T *)(&rpdriver_DW.Memory2_PreviousInput), 0, 0, 7 },
+  { (char_T *)(&rpdriver_DW.Memory2_PreviousInput), 0, 0, 3 },
 
   { (char_T *)(&rpdriver_DW.PlotState_PWORK.LoggedData[0]), 11, 0, 13 }
 };
@@ -74,7 +74,7 @@ static DataTypeTransitionTable rtBTransTable = {
 
 /* data type transitions for Parameters structure */
 static DataTypeTransition rtPTransitions[] = {
-  { (char_T *)(&rpdriver_P.K[0]), 0, 0, 123 },
+  { (char_T *)(&rpdriver_P.K[0]), 0, 0, 38 },
 
   { (char_T *)(&rpdriver_P.ResetEncoders2_CurrentSetting), 3, 0, 3 }
 };

@@ -28,8 +28,8 @@
     ;%
     ;% Auto data (rpdriver_P)
     ;%
-      section.nData     = 34;
-      section.data(34)  = dumData; %prealloc
+      section.nData     = 31;
+      section.data(31)  = dumData; %prealloc
       
 	  ;% rpdriver_P.K
 	  section.data(1).logicalSrcIdx = 0;
@@ -155,18 +155,6 @@
 	  section.data(31).logicalSrcIdx = 30;
 	  section.data(31).dtTransOffset = 37;
 	
-	  ;% rpdriver_P.LookUpTable_XData
-	  section.data(32).logicalSrcIdx = 31;
-	  section.data(32).dtTransOffset = 38;
-	
-	  ;% rpdriver_P.LookUpTable_YData
-	  section.data(33).logicalSrcIdx = 32;
-	  section.data(33).dtTransOffset = 80;
-	
-	  ;% rpdriver_P.HitCrossing_Offset
-	  section.data(34).logicalSrcIdx = 33;
-	  section.data(34).dtTransOffset = 122;
-	
       nTotData = nTotData + section.nData;
       paramMap.sections(1) = section;
       clear section
@@ -175,15 +163,15 @@
       section.data(3)  = dumData; %prealloc
       
 	  ;% rpdriver_P.ResetEncoders2_CurrentSetting
-	  section.data(1).logicalSrcIdx = 34;
+	  section.data(1).logicalSrcIdx = 31;
 	  section.data(1).dtTransOffset = 0;
 	
 	  ;% rpdriver_P.ResetEncoders1_CurrentSetting
-	  section.data(2).logicalSrcIdx = 35;
+	  section.data(2).logicalSrcIdx = 32;
 	  section.data(2).dtTransOffset = 1;
 	
 	  ;% rpdriver_P.ResetEncoders_CurrentSetting
-	  section.data(3).logicalSrcIdx = 36;
+	  section.data(3).logicalSrcIdx = 33;
 	  section.data(3).dtTransOffset = 2;
 	
       nTotData = nTotData + section.nData;
@@ -231,8 +219,8 @@
     ;%
     ;% Auto data (rpdriver_B)
     ;%
-      section.nData     = 27;
-      section.data(27)  = dumData; %prealloc
+      section.nData     = 25;
+      section.data(25)  = dumData; %prealloc
       
 	  ;% rpdriver_B.SFunction_o1
 	  section.data(1).logicalSrcIdx = 0;
@@ -334,14 +322,6 @@
 	  section.data(25).logicalSrcIdx = 24;
 	  section.data(25).dtTransOffset = 26;
 	
-	  ;% rpdriver_B.LookUpTable
-	  section.data(26).logicalSrcIdx = 25;
-	  section.data(26).dtTransOffset = 27;
-	
-	  ;% rpdriver_B.Derivative
-	  section.data(27).logicalSrcIdx = 26;
-	  section.data(27).dtTransOffset = 28;
-	
       nTotData = nTotData + section.nData;
       sigMap.sections(1) = section;
       clear section
@@ -387,8 +367,8 @@
     ;%
     ;% Auto data (rpdriver_DW)
     ;%
-      section.nData     = 7;
-      section.data(7)  = dumData; %prealloc
+      section.nData     = 3;
+      section.data(3)  = dumData; %prealloc
       
 	  ;% rpdriver_DW.Memory2_PreviousInput
 	  section.data(1).logicalSrcIdx = 0;
@@ -402,22 +382,6 @@
 	  section.data(3).logicalSrcIdx = 2;
 	  section.data(3).dtTransOffset = 2;
 	
-	  ;% rpdriver_DW.TimeStampA
-	  section.data(4).logicalSrcIdx = 3;
-	  section.data(4).dtTransOffset = 3;
-	
-	  ;% rpdriver_DW.LastUAtTimeA
-	  section.data(5).logicalSrcIdx = 4;
-	  section.data(5).dtTransOffset = 4;
-	
-	  ;% rpdriver_DW.TimeStampB
-	  section.data(6).logicalSrcIdx = 5;
-	  section.data(6).dtTransOffset = 5;
-	
-	  ;% rpdriver_DW.LastUAtTimeB
-	  section.data(7).logicalSrcIdx = 6;
-	  section.data(7).dtTransOffset = 6;
-	
       nTotData = nTotData + section.nData;
       dworkMap.sections(1) = section;
       clear section
@@ -426,15 +390,15 @@
       section.data(3)  = dumData; %prealloc
       
 	  ;% rpdriver_DW.PlotState_PWORK.LoggedData
-	  section.data(1).logicalSrcIdx = 7;
+	  section.data(1).logicalSrcIdx = 3;
 	  section.data(1).dtTransOffset = 0;
 	
 	  ;% rpdriver_DW.Scope_PWORK.LoggedData
-	  section.data(2).logicalSrcIdx = 8;
+	  section.data(2).logicalSrcIdx = 4;
 	  section.data(2).dtTransOffset = 8;
 	
 	  ;% rpdriver_DW.Scope1_PWORK.LoggedData
-	  section.data(3).logicalSrcIdx = 9;
+	  section.data(3).logicalSrcIdx = 5;
 	  section.data(3).dtTransOffset = 12;
 	
       nTotData = nTotData + section.nData;
@@ -467,8 +431,8 @@
   ;%
 
 
-  targMap.checksum0 = 2839709376;
-  targMap.checksum1 = 3946555173;
-  targMap.checksum2 = 713148146;
-  targMap.checksum3 = 1681574305;
+  targMap.checksum0 = 3039729901;
+  targMap.checksum1 = 3516787895;
+  targMap.checksum2 = 1320134685;
+  targMap.checksum3 = 3681578796;
 
