@@ -123,7 +123,7 @@
 	  section.data(23).logicalSrcIdx = 22;
 	  section.data(23).dtTransOffset = 26;
 	
-	  ;% rpdriver_P.Constant1_Value
+	  ;% rpdriver_P.u_ep_Value
 	  section.data(24).logicalSrcIdx = 23;
 	  section.data(24).dtTransOffset = 29;
 	
@@ -219,8 +219,8 @@
     ;%
     ;% Auto data (rpdriver_B)
     ;%
-      section.nData     = 25;
-      section.data(25)  = dumData; %prealloc
+      section.nData     = 26;
+      section.data(26)  = dumData; %prealloc
       
 	  ;% rpdriver_B.SFunction_o1
 	  section.data(1).logicalSrcIdx = 0;
@@ -282,45 +282,49 @@
 	  section.data(15).logicalSrcIdx = 14;
 	  section.data(15).dtTransOffset = 15;
 	
-	  ;% rpdriver_B.Gain
+	  ;% rpdriver_B.Sum1
 	  section.data(16).logicalSrcIdx = 15;
 	  section.data(16).dtTransOffset = 16;
 	
-	  ;% rpdriver_B.Sum
+	  ;% rpdriver_B.Gain
 	  section.data(17).logicalSrcIdx = 16;
-	  section.data(17).dtTransOffset = 17;
+	  section.data(17).dtTransOffset = 19;
+	
+	  ;% rpdriver_B.Sum
+	  section.data(18).logicalSrcIdx = 17;
+	  section.data(18).dtTransOffset = 20;
 	
 	  ;% rpdriver_B.Control
-	  section.data(18).logicalSrcIdx = 17;
-	  section.data(18).dtTransOffset = 18;
+	  section.data(19).logicalSrcIdx = 18;
+	  section.data(19).dtTransOffset = 21;
 	
 	  ;% rpdriver_B.Gain2
-	  section.data(19).logicalSrcIdx = 18;
-	  section.data(19).dtTransOffset = 19;
+	  section.data(20).logicalSrcIdx = 19;
+	  section.data(20).dtTransOffset = 22;
 	
 	  ;% rpdriver_B.Gain4
-	  section.data(20).logicalSrcIdx = 19;
-	  section.data(20).dtTransOffset = 20;
+	  section.data(21).logicalSrcIdx = 20;
+	  section.data(21).dtTransOffset = 23;
 	
 	  ;% rpdriver_B.Gain5
-	  section.data(21).logicalSrcIdx = 20;
-	  section.data(21).dtTransOffset = 21;
+	  section.data(22).logicalSrcIdx = 21;
+	  section.data(22).dtTransOffset = 24;
 	
 	  ;% rpdriver_B.Gain_j
-	  section.data(22).logicalSrcIdx = 21;
-	  section.data(22).dtTransOffset = 22;
+	  section.data(23).logicalSrcIdx = 22;
+	  section.data(23).dtTransOffset = 25;
 	
 	  ;% rpdriver_B.Prescaler
-	  section.data(23).logicalSrcIdx = 22;
-	  section.data(23).dtTransOffset = 24;
+	  section.data(24).logicalSrcIdx = 23;
+	  section.data(24).dtTransOffset = 27;
 	
 	  ;% rpdriver_B.Saturation
-	  section.data(24).logicalSrcIdx = 23;
-	  section.data(24).dtTransOffset = 25;
+	  section.data(25).logicalSrcIdx = 24;
+	  section.data(25).dtTransOffset = 28;
 	
 	  ;% rpdriver_B.ThermFlag
-	  section.data(25).logicalSrcIdx = 24;
-	  section.data(25).dtTransOffset = 26;
+	  section.data(26).logicalSrcIdx = 25;
+	  section.data(26).dtTransOffset = 29;
 	
       nTotData = nTotData + section.nData;
       sigMap.sections(1) = section;
@@ -386,8 +390,8 @@
       dworkMap.sections(1) = section;
       clear section
       
-      section.nData     = 3;
-      section.data(3)  = dumData; %prealloc
+      section.nData     = 4;
+      section.data(4)  = dumData; %prealloc
       
 	  ;% rpdriver_DW.PlotState_PWORK.LoggedData
 	  section.data(1).logicalSrcIdx = 3;
@@ -400,6 +404,10 @@
 	  ;% rpdriver_DW.Scope1_PWORK.LoggedData
 	  section.data(3).logicalSrcIdx = 5;
 	  section.data(3).dtTransOffset = 12;
+	
+	  ;% rpdriver_DW.Scope2_PWORK.LoggedData
+	  section.data(4).logicalSrcIdx = 6;
+	  section.data(4).dtTransOffset = 13;
 	
       nTotData = nTotData + section.nData;
       dworkMap.sections(2) = section;
@@ -431,8 +439,8 @@
   ;%
 
 
-  targMap.checksum0 = 4158064472;
-  targMap.checksum1 = 3874858511;
-  targMap.checksum2 = 4200038093;
-  targMap.checksum3 = 1401664833;
+  targMap.checksum0 = 1269898299;
+  targMap.checksum1 = 4228476463;
+  targMap.checksum2 = 1118831268;
+  targMap.checksum3 = 2792886454;
 

@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.345
+ * Model version              : 1.0
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Nov 20 11:01:14 2023
+ * C source code generated on : Mon Nov 27 09:26:44 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -148,6 +148,7 @@ typedef struct {
   real_T DCAnglerad;                   /* '<S1>/DC Convert to rad' */
   real_T DCVelrads;                    /* '<S1>/Divide' */
   real_T DCConverttoA1;                /* '<S1>/DC Convert to [A]1' */
+  real_T Sum1[3];                      /* '<Root>/Sum1' */
   real_T Gain;                         /* '<Root>/Gain' */
   real_T Sum;                          /* '<Root>/Sum' */
   real_T Control;                      /* '<Root>/Gain3' */
@@ -176,6 +177,10 @@ typedef struct {
   struct {
     void *LoggedData;
   } Scope1_PWORK;                      /* '<Root>/Scope1' */
+
+  struct {
+    void *LoggedData[3];
+  } Scope2_PWORK;                      /* '<Root>/Scope2' */
 } DW_rpdriver_T;
 
 /* Parameters (default storage) */
@@ -250,11 +255,11 @@ struct P_rpdriver_T_ {
   real_T DCConverttoA1_Gain;           /* Expression: 1
                                         * Referenced by: '<S1>/DC Convert to [A]1'
                                         */
-  real_T x_ep_Value[3];                /* Expression: [-3.14 0 0]
+  real_T x_ep_Value[3];                /* Expression: [0 0 0]
                                         * Referenced by: '<Root>/x_ep'
                                         */
-  real_T Constant1_Value;              /* Expression: 0
-                                        * Referenced by: '<Root>/Constant1'
+  real_T u_ep_Value;                   /* Expression: 0
+                                        * Referenced by: '<Root>/u_ep'
                                         */
   real_T Gain3_Gain;                   /* Expression: 1
                                         * Referenced by: '<Root>/Gain3'
@@ -442,6 +447,5 @@ extern RT_MODEL_rpdriver_T *const rpdriver_M;
  * '<S1>'   : 'rpdriver/RP Driver'
  * '<S2>'   : 'rpdriver/Stair Generator'
  * '<S3>'   : 'rpdriver/RP Driver/Alfa Normalization'
- * '<S4>'   : 'rpdriver/Stair Generator/Model'
  */
 #endif                                 /* RTW_HEADER_rpdriver_h_ */

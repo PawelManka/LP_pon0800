@@ -7,9 +7,9 @@
  *
  * Code generation for model "rpdriver".
  *
- * Model version              : 1.345
+ * Model version              : 1.0
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C source code generated on : Mon Nov 20 11:01:14 2023
+ * C source code generated on : Mon Nov 27 09:26:44 2023
  *
  * Target selection: rtcon_rpend_usb2.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -138,24 +138,27 @@ void rpdriver_step(void)
   rpdriver_B.DCConverttoA1 = rpdriver_P.DCConverttoA1_Gain *
     rpdriver_B.SFunction_o4;
 
-  /* Gain: '<Root>/Gain' incorporates:
+  /* Sum: '<Root>/Sum1' incorporates:
    *  Constant: '<Root>/x_ep'
+   */
+  rpdriver_B.Sum1[0] = rpdriver_B.PendulumAnglerad - rpdriver_P.x_ep_Value[0];
+  rpdriver_B.Sum1[1] = rpdriver_B.PendulumVelrads - rpdriver_P.x_ep_Value[1];
+  rpdriver_B.Sum1[2] = rpdriver_B.DCVelrads - rpdriver_P.x_ep_Value[2];
+
+  /* Gain: '<Root>/Gain' incorporates:
    *  Gain: '<Root>/Gain2'
    *  Gain: '<Root>/Gain4'
    *  Gain: '<Root>/Gain5'
-   *  Sum: '<Root>/Sum1'
    */
-  Gain_tmp = rpdriver_P.K[0] * (rpdriver_B.PendulumAnglerad -
-    rpdriver_P.x_ep_Value[0]);
-  Gain_tmp_0 = rpdriver_P.K[1] * (rpdriver_B.PendulumVelrads -
-    rpdriver_P.x_ep_Value[1]);
-  Gain_tmp_1 = rpdriver_P.K[2] * (rpdriver_B.DCVelrads - rpdriver_P.x_ep_Value[2]);
+  Gain_tmp = rpdriver_P.K[0] * rpdriver_B.Sum1[0];
+  Gain_tmp_0 = rpdriver_P.K[1] * rpdriver_B.Sum1[1];
+  Gain_tmp_1 = rpdriver_P.K[2] * rpdriver_B.Sum1[2];
   rpdriver_B.Gain = (Gain_tmp + Gain_tmp_0) + Gain_tmp_1;
 
   /* Sum: '<Root>/Sum' incorporates:
-   *  Constant: '<Root>/Constant1'
+   *  Constant: '<Root>/u_ep'
    */
-  rpdriver_B.Sum = rpdriver_P.Constant1_Value - rpdriver_B.Gain;
+  rpdriver_B.Sum = rpdriver_P.u_ep_Value - rpdriver_B.Gain;
 
   /* ManualSwitch: '<Root>/Reset Encoders1' incorporates:
    *  Constant: '<Root>/DC_Ctrl2'
@@ -310,6 +313,40 @@ void rpdriver_step(void)
       real_T up3[1];
       up3[0] = rpdriver_B.Gain5;
       rt_UpdateLogVar((LogVar *)var, up3, 0);
+    }
+  }
+
+  /* Scope: '<Root>/Scope2' */
+  {
+    StructLogVar *svar = (StructLogVar *)rpdriver_DW.Scope2_PWORK.LoggedData[0];
+    LogVar *var = svar->signals.values;
+
+    /* time */
+    {
+      double locTime = rpdriver_M->Timing.t[1];
+      ;
+      rt_UpdateLogVar((LogVar *)svar->time, &locTime, 0);
+    }
+
+    /* signals */
+    {
+      real_T up0[1];
+      up0[0] = rpdriver_B.Sum1[0];
+      rt_UpdateLogVar((LogVar *)var, up0, 0);
+      var = var->next;
+    }
+
+    {
+      real_T up1[1];
+      up1[0] = rpdriver_B.Sum1[1];
+      rt_UpdateLogVar((LogVar *)var, up1, 0);
+      var = var->next;
+    }
+
+    {
+      real_T up2[1];
+      up2[0] = rpdriver_B.Sum1[2];
+      rt_UpdateLogVar((LogVar *)var, up2, 0);
     }
   }
 
@@ -504,10 +541,10 @@ void rpdriver_initialize(void)
   }
 
   /* External mode info */
-  rpdriver_M->Sizes.checksums[0] = (4158064472U);
-  rpdriver_M->Sizes.checksums[1] = (3874858511U);
-  rpdriver_M->Sizes.checksums[2] = (4200038093U);
-  rpdriver_M->Sizes.checksums[3] = (1401664833U);
+  rpdriver_M->Sizes.checksums[0] = (1269898299U);
+  rpdriver_M->Sizes.checksums[1] = (4228476463U);
+  rpdriver_M->Sizes.checksums[2] = (1118831268U);
+  rpdriver_M->Sizes.checksums[3] = (2792886454U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -916,7 +953,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "test6_wahadlo_pionowe",
+      "wskazniki_jakosci_stan_test2",
       1,
       0,
       1,
@@ -988,7 +1025,7 @@ void rpdriver_initialize(void)
       rtmGetTFinal(rpdriver_M),
       rpdriver_M->Timing.stepSize0,
       (&rtmGetErrorStatus(rpdriver_M)),
-      "test_6_wahadlo_pionowe",
+      "wskazniki_jakosci_sterowanie_test2",
       1,
       0,
       1,
@@ -996,6 +1033,77 @@ void rpdriver_initialize(void)
       &rt_ScopeSignalInfo,
       rt_ScopeBlockName);
     if (rpdriver_DW.Scope_PWORK.LoggedData[0] == (NULL))
+      return;
+  }
+
+  /* Start for Scope: '<Root>/Scope2' */
+  {
+    RTWLogSignalInfo rt_ScopeSignalInfo;
+    static int_T rt_ScopeSignalWidths[] = { 1, 1, 1 };
+
+    static int_T rt_ScopeSignalNumDimensions[] = { 1, 1, 1 };
+
+    static int_T rt_ScopeSignalDimensions[] = { 1, 1, 1 };
+
+    static void *rt_ScopeCurrSigDims[] = { (NULL), (NULL), (NULL) };
+
+    static int_T rt_ScopeCurrSigDimsSize[] = { 4, 4, 4 };
+
+    static const char_T *rt_ScopeSignalLabels[] = { "",
+      "",
+      "" };
+
+    static char_T rt_ScopeSignalTitles[] = "";
+    static int_T rt_ScopeSignalTitleLengths[] = { 0, 0, 0 };
+
+    static boolean_T rt_ScopeSignalIsVarDims[] = { 0, 0, 0 };
+
+    static int_T rt_ScopeSignalPlotStyles[] = { 1, 1, 1 };
+
+    BuiltInDTypeId dTypes[3] = { SS_DOUBLE, SS_DOUBLE, SS_DOUBLE };
+
+    static char_T rt_ScopeBlockName[] = "rpdriver/Scope2";
+    static int_T rt_ScopeFrameData[] = { 0, 0, 0 };
+
+    static RTWPreprocessingFcnPtr rt_ScopeSignalLoggingPreprocessingFcnPtrs[] =
+      {
+      (NULL), (NULL), (NULL)
+    };
+
+    rt_ScopeSignalInfo.numSignals = 3;
+    rt_ScopeSignalInfo.numCols = rt_ScopeSignalWidths;
+    rt_ScopeSignalInfo.numDims = rt_ScopeSignalNumDimensions;
+    rt_ScopeSignalInfo.dims = rt_ScopeSignalDimensions;
+    rt_ScopeSignalInfo.isVarDims = rt_ScopeSignalIsVarDims;
+    rt_ScopeSignalInfo.currSigDims = rt_ScopeCurrSigDims;
+    rt_ScopeSignalInfo.currSigDimsSize = rt_ScopeCurrSigDimsSize;
+    rt_ScopeSignalInfo.dataTypes = dTypes;
+    rt_ScopeSignalInfo.complexSignals = (NULL);
+    rt_ScopeSignalInfo.frameData = rt_ScopeFrameData;
+    rt_ScopeSignalInfo.preprocessingPtrs =
+      rt_ScopeSignalLoggingPreprocessingFcnPtrs;
+    rt_ScopeSignalInfo.labels.cptr = rt_ScopeSignalLabels;
+    rt_ScopeSignalInfo.titles = rt_ScopeSignalTitles;
+    rt_ScopeSignalInfo.titleLengths = rt_ScopeSignalTitleLengths;
+    rt_ScopeSignalInfo.plotStyles = rt_ScopeSignalPlotStyles;
+    rt_ScopeSignalInfo.blockNames.cptr = (NULL);
+    rt_ScopeSignalInfo.stateNames.cptr = (NULL);
+    rt_ScopeSignalInfo.crossMdlRef = (NULL);
+    rt_ScopeSignalInfo.dataTypeConvert = (NULL);
+    rpdriver_DW.Scope2_PWORK.LoggedData[0] = rt_CreateStructLogVar(
+      rpdriver_M->rtwLogInfo,
+      0.0,
+      rtmGetTFinal(rpdriver_M),
+      rpdriver_M->Timing.stepSize0,
+      (&rtmGetErrorStatus(rpdriver_M)),
+      "wskazniki_jakosci_uchyb_test2",
+      1,
+      0,
+      1,
+      0.01,
+      &rt_ScopeSignalInfo,
+      rt_ScopeBlockName);
+    if (rpdriver_DW.Scope2_PWORK.LoggedData[0] == (NULL))
       return;
   }
 
